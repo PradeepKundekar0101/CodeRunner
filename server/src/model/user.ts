@@ -1,7 +1,7 @@
 import mongoose, { Mongoose, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-interface IUser {
+export interface IUser {
   user_name: string;
   email: string;
   password: string;
@@ -49,4 +49,4 @@ UserSchema.methods.generateToken = async function () {
   );
 };
 
-export const userModel = mongoose.model<IUser>("User", UserSchema);
+export const User = mongoose.model<IUser>("User", UserSchema);

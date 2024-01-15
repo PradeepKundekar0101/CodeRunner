@@ -7,7 +7,6 @@ connectDB().then(()=>{
     app.listen(PORT,()=>{
         console.log("Server running at PORT "+PORT);
     })
-    
 }).catch((error)=>{
     console.log(error.message)
 })

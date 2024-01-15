@@ -1,5 +1,5 @@
 import mongoose, { ObjectId } from "mongoose";
-interface ISandBox{
+export interface ISandBox{
     code:string
     output:string
     userId: ObjectId
