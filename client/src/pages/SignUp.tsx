@@ -4,6 +4,8 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { UserService } from "../service/user";
 import { useAppDispatch } from "../app/hooks";
 import { login } from '../app/slices/authSlice';
+import { Toaster } from "react-hot-toast";
+import { notify } from "../utils/notify";
 
 const SignUp = () => {
     const dispatch = useAppDispatch();
@@ -55,20 +57,21 @@ const SignUp = () => {
                 setPasswordError("Passwords do not match");
                 return;
             }
-            
             setLoading(true);
-            // Assuming you have a signupUser function in your UserService
             const response = await UserService.registerUser({ email, password, user_name });
             dispatch(login(response));
             setLoading(false);
-        } catch (error) {
+            notify("User create!",true);
+        } catch (error:any) {
+            console.log(error)
+            notify(error.message,false);
             setLoading(false);
-            alert(error);
         }
     }
 
     return (
         <div className="bg-black h-[80vh] flex items-center justify-center ">
+            <Toaster/>
             <form className="max-w-sm mx-auto w-full" onSubmit={handleSubmit}>
                 <h1 className="text-7xl my-10 text-white font-extrabold">Register</h1>
                 <div className="mb-5">

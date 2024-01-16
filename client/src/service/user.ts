@@ -8,7 +8,7 @@ const UserService={
             const {data} = await axios.post<{status:string,data:{user:User,token:string}}>(`${BASE_URL}/api/v1/user/login`,{email,password});
             return data.data;
         } catch (error:any) {
-            throw new Error(error.response?.data||'Something went wrong');
+            throw new Error(error.response.data.message||'Something went wrong');
         }
     },
     registerUser : async({email,password,user_name}:{email:string,password:string,user_name:string}):Promise<{user:User,token:string}>=>{
@@ -16,7 +16,7 @@ const UserService={
             const {data} = await axios.post<{status:string,data:{user:User,token:string}}>(`${BASE_URL}/api/v1/user/register`,{email,password,user_name});
             return data.data;
         } catch (error:any) {
-            throw new Error(error.response?.data||'Something went wrong');
+            throw new Error(error.response.data.message || 'Something went wrong, please try again later');
         }
     }
 }

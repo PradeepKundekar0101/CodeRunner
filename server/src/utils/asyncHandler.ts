@@ -1,7 +1,21 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
-const asyncHandler = (requestHandler:RequestHandler)=> {
-    return (req:Request,res:Response,next:NextFunction)=> {
-        Promise.resolve(requestHandler(req, res, next)).catch((err)=>next(err))
-    }
-}
-export {asyncHandler};
+import { ApiError } from "./apiError";
+
+const asyncHandler = (requestHandler: RequestHandler) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        await Promise.resolve(requestHandler(req, res, next));
+      } catch (error:any) {
+        if (error instanceof ApiError) {
+          return res.status(error.statusCode).json({
+            message: error.message,
+            success: false,
+            errors: error.errors,
+          });
+        }
+        next(error);
+      }
+    };
+  };
+  
+  export { asyncHandler };
