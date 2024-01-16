@@ -1,11 +1,15 @@
-import mongoose, { Mongoose, Schema } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-export interface IUser {
+
+export interface IUser extends Document {
   user_name: string;
   email: string;
   password: string;
+  isPasswordCorrect(password: string): Promise<boolean>;
+  generateToken(): Promise<string>;
 }
+
 const UserSchema = new Schema<IUser>({
   user_name: {
     type: String,
@@ -23,7 +27,7 @@ const UserSchema = new Schema<IUser>({
     trim: true,
     lowercase: true,
     match: [
-      /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
+      /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{1,7}$/,
       "Please enter a valid email address",
     ],
   },
@@ -32,6 +36,7 @@ const UserSchema = new Schema<IUser>({
     required: true,
   },
 });
+
 UserSchema.pre("save", async function (next) {
   if (this.isModified("password"))
     this.password = await bcrypt.hash(this.password, 10);

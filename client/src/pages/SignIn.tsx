@@ -4,6 +4,8 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { UserService } from "../service/user";
 import { useAppDispatch } from "../app/hooks";
 import {login} from '../app/slices/authSlice'
+import { notify } from "../utils/notify";
+import { Toaster } from "react-hot-toast";
 const SignIn = () => {
     const dispatch = useAppDispatch();
     const [email,setEmail] = useState<string>("");
@@ -20,21 +22,26 @@ const SignIn = () => {
     function handlePasswordChange(e: ChangeEvent<HTMLInputElement>): void {
         setPassword(e.target.value);
     }
-    const handleSubmit = async(e: FormEvent<HTMLFormElement>)=>{
-        e.preventDefault();
-        try {
-            setLoading(true);
-            const response = await UserService.loginUser({email,password});
-            dispatch(login(response));
-            setLoading(false);
-        } catch (error) {
-            setLoading(false);
-            alert(error);
-        }
-    }
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      try {
+          
+          setLoading(true);
+          const response = await UserService.loginUser({ email, password });
+          dispatch(login(response));
+          setLoading(false);
+          notify("User logined!",true);
+      } catch (error:any) {
+          console.log(error)
+          notify(error.message,false);
+          setLoading(false);
+      }
+  }
+
 
   return (
     <div className="bg-black h-[80vh] flex items-center justify-center ">
+      <Toaster/>
       <form className="max-w-sm mx-auto w-full" onSubmit={handleSubmit}>
         <h1 className="text-7xl my-10 text-white font-extrabold">Login</h1>
         <div className="mb-5">
