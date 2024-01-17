@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  coderbro-service:
+    image: pradeepkundekar0101/coderbro-server
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    container_name: coderbro-container
