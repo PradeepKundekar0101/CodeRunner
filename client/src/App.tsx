@@ -7,6 +7,7 @@ import NotFound from './pages/NotFound'
 import Layout from './components/Layout'
 import { useAppSelector } from './app/hooks'
 import Hello from './pages/Hello'
+import SandBox from './pages/SandBox'
 
 function App() {
   const user = useAppSelector((state)=>{return state.auth.user});
@@ -15,6 +16,7 @@ function App() {
         <Route path='' element={user?<Home user={user}/>:<Hello/>}/>
          <Route path='signin' element={!user?<SignIn/>:<Navigate to="/"/>}/>
         <Route path='signup' element={!user?<SignUp/>:<Navigate to="/"/>}/>
+        <Route path='sandbox' element={user?<SandBox/>:<Navigate to="/sandbox"/>}/>
         <Route path='/notfound' element={<NotFound/>}/>
     </Route>
   ))  
