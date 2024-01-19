@@ -7,17 +7,25 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "vite"
   },
   "dependencies": {
+    "@monaco-editor/react": "^4.6.0",
     "@reduxjs/toolkit": "^2.0.1",
     "axios": "^1.6.5",
+    "iframe-worker": "^1.0.3",
+    "isolated-vm": "^4.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
     "react-redux": "^9.1.0",
     "react-router-dom": "^6.21.2",
-    "redux-persist": "^6.0.0"
+    "redux-persist": "^6.0.0",
+    "vm-browserify": "^1.1.2",
+    "vm2": "^3.9.19",
+    "xterm": "^5.3.0",
+    "xterm-addon-fit": "^0.8.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

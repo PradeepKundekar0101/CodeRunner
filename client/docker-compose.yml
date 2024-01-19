@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  coderbro-service:
+    image: coderbroclient
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    container_name: coderbro-client-container
