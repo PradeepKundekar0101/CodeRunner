@@ -22,6 +22,9 @@ const limiter = (0, express_rate_limit_1.rateLimit)({
     message: 'Too many requests from this IP, please try again later.',
 });
 app.use('/api/v1/code', limiter);
+app.get("/api/v1/health", (req, res) => {
+    res.send("Hello");
+});
 app.use('/api/v1/user', user_routes_1.default);
 app.use('/api/v1/code', code_routes_1.default);
 // Unhandled Routes:

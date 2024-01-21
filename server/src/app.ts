@@ -1,5 +1,5 @@
 import cors from 'cors';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import userRoute from './routes/user.routes'
 import codeRoute from './routes/code.routes'
 import {rateLimit} from 'express-rate-limit'
@@ -17,7 +17,9 @@ const limiter = rateLimit({
 });
 
 app.use('/api/v1/code', limiter);
-
+app.get("/api/v1/health",(req:Request,res:Response)=>{
+  res.send("Hello");
+})
 app.use('/api/v1/user',userRoute);
 app.use('/api/v1/code',codeRoute)
 // Unhandled Routes:
