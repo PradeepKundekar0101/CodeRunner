@@ -1,4 +1,5 @@
 import cors from 'cors';
+import {Request,Response} from 'express';
 import express from 'express';
 import userRoute from './routes/user.routes'
 import codeRoute from './routes/code.routes'
@@ -8,7 +9,10 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.static("public"));
 app.use(express.json());
 app.use('/api/v1/user',userRoute);
-app.use('/api/v1/code',codeRoute)
+app.use('/api/v1/code',codeRoute);
+app.get('/api/health',(req:Request,res:Response)=>{
+    res.send("Hello from the server");
+});
 // Unhandled Routes:
 app.all("*", (req, res, next) => {
     res.status(404).json({
