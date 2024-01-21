@@ -1,0 +1,74 @@
+pipeline {
+ 
+    agent any
+    stages {
+        stage('Clone Code') {
+            steps {
+                echo "Cloning Repo"
+                git url:"https://github.com/PradeepKundekar0101/CodeRunner.git", branch:"master"
+                echo "Cloned!"
+            }
+        }
+        
+             stage('Create .env file') {
+                steps {
+                    script {
+                        // Retrieve credentials from Jenkins Global credentials
+                        def mongoUri = ''
+                        def jwtSecret = ''
+    
+                        // Retrieve MONGO_URI credential
+                        withCredentials([string(credentialsId: 'MONGO_URI', variable: 'MONGO_URI')]) {
+                            mongoUri = env.MONGO_URI
+                        }
+    
+                        // Retrieve JWT_SECRET credential
+                        withCredentials([string(credentialsId: 'JWT_SECRET', variable: 'JWT_SECRET')]) {
+                            jwtSecret = env.JWT_SECRET
+                        }
+                        // Create the .env file content
+                        def envContent = """
+                            MONGO_URI=${mongoUri}
+                            JWT_SECRET=${jwtSecret}
+                        """
+                        // Write the content to the server.env file
+                        dir("server"){
+                            writeFile file: '.env', text: envContent
+                        }
+                    }
+                }
+            }
+
+        stage('Build') {
+            steps {
+                echo 'Building image'
+                dir('server') {
+                        sh 'docker build -t coderbro-server .'
+                        echo 'Build done'
+                    }
+            }
+        }  
+        stage('Push to DH') {
+            steps {
+                echo 'Pushing the image to DH'
+                withCredentials([usernamePassword(credentialsId:"dockerHub",passwordVariable:"dockerPass",usernameVariable:"dockerUser")]){
+                    sh "docker login -u ${env.dockerUser} -p ${env.dockerPass}"
+                    sh "docker tag coderbro-server ${env.dockerUser}/coderbro-server:latest"
+                    sh "docker push ${env.dockerUser}/coderbro-server:latest"
+                }
+                echo "Image Pushed"
+                
+            }
+        }   
+        stage('Deploy') {
+            steps {
+                dir('server'){
+                     sh "docker-compose down && docker-compose up -d"
+                     sh "docker-compose logs"
+                }
+                echo 'Deployed successfully'
+            }
+        }
+    }
+  
+}
