@@ -28,6 +28,10 @@ const SandBox: React.FC = () => {
 
     } catch (error:any) {
       setRunning(false);
+      if(error.response){
+        notify(error.response.data,false);
+        return;
+      }
       notify(error.message,false);
       console.error('Error running code:', error);
     }
@@ -85,7 +89,6 @@ const SandBox: React.FC = () => {
       />
      
       <div className='bg-black text-green-400 w-[40%]'>
-     
         <h2>Output:</h2>
         <pre className='text-green-400'>{output}</pre>
       </div>

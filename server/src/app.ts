@@ -1,18 +1,30 @@
 import cors from 'cors';
-import {Request,Response} from 'express';
-import express from 'express';
+
+import express, { Request, Response } from 'express';
+
 import userRoute from './routes/user.routes'
 import codeRoute from './routes/code.routes'
+import {rateLimit} from 'express-rate-limit'
 const app = express();
 app.use(cors({origin: "*" }));
 app.use(express.urlencoded({extended:true}));
 app.use(express.static("public"));
 app.use(express.json());
+
+// Define the rate limiter middleware
+const limiter = rateLimit({
+  windowMs: 10 * 1000, 
+  max: 1, // limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.',
+});
+
+app.use('/api/v1/code', limiter);
+app.get("/api/v1/health",(req:Request,res:Response)=>{
+  res.send("Hello");
+})
 app.use('/api/v1/user',userRoute);
 app.use('/api/v1/code',codeRoute);
-app.get('/api/health',(req:Request,res:Response)=>{
-    res.send("Hello from the server");
-});
+
 // Unhandled Routes:
 app.all("*", (req, res, next) => {
     res.status(404).json({
