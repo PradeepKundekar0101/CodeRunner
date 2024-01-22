@@ -8,4 +8,5 @@ const code_1 = require("../controller/code");
 const router = express_1.default.Router();
 router.post('/execute', code_1.executeCode);
 router.post('/save', code_1.saveCode);
+router.get("/status", code_1.status);
 exports.default = router;

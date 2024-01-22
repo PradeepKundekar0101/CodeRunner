@@ -12,16 +12,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.saveCode = exports.executeCode = void 0;
+exports.status = exports.saveCode = exports.executeCode = void 0;
 const apiError_1 = require("../utils/apiError");
+const apiResponse_1 = require("../utils/apiResponse");
 const dockerode_1 = __importDefault(require("dockerode"));
 const asyncHandler_1 = require("../utils/asyncHandler");
+const job_1 = __importDefault(require("../model/job"));
 exports.executeCode = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const docker = new dockerode_1.default();
     const { code, userId, language } = req.body;
     if (!code || !language) {
         throw new apiError_1.ApiError(400, "Code and language are required");
     }
+    const job = yield job_1.default.create({ code, language, userId });
+    res.status(200).json({ jobId: job._id });
     let image;
     let command;
     // Define Docker configurations based on language
@@ -56,15 +60,36 @@ exports.executeCode = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(v
         AttachStderr: true,
         Cmd: command,
     };
-    const container = yield docker.createContainer(containerConfig);
-    yield container.start();
-    yield container.wait();
-    const containerLogs = yield container.logs({ stdout: true, stderr: true });
-    const containerResult = containerLogs.toString('utf-8').trim();
-    console.log(containerResult);
-    return res.status(200).json({ output: containerResult });
+    try {
+        job.startedAt = new Date();
+        const container = yield docker.createContainer(containerConfig);
+        yield container.start();
+        yield container.wait();
+        const containerLogs = yield container.logs({ stdout: true, stderr: true });
+        const containerResult = containerLogs.toString('utf-8').trim();
+        console.log(containerResult);
+        job["completedAt"] = new Date();
+        job["status"] = "success";
+        job["output"] = containerResult;
+        yield job.save();
+    }
+    catch (error) {
+        job["completedAt"] = new Date();
+        job["output"] = error.message;
+        job["status"] = "failed";
+        throw new apiError_1.ApiError(500, JSON.stringify(error.message));
+    }
 }));
 const saveCode = () => {
     // Implement code saving logic if needed
 };
 exports.saveCode = saveCode;
+exports.status = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const jobId = req.query.jobId;
+    if (!jobId)
+        throw new apiError_1.ApiError(400, "JobId required");
+    const jobFound = yield job_1.default.findById(jobId);
+    if (!jobFound)
+        throw new apiError_1.ApiError(404, "Job with this id not found");
+    return res.status(200).json(new apiResponse_1.ApiResponse(200, "Success", { job: jobFound }, true));
+}));

@@ -21,7 +21,7 @@ const limiter = (0, express_rate_limit_1.rateLimit)({
     max: 1, // limit each IP to 100 requests per windowMs
     message: 'Too many requests from this IP, please try again later.',
 });
-app.use('/api/v1/code', limiter);
+app.use('/api/v1/code/execute', limiter);
 app.get("/api/v1/health", (req, res) => {
     res.send("Hello");
 });

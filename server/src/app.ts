@@ -18,7 +18,7 @@ const limiter = rateLimit({
   message: 'Too many requests from this IP, please try again later.',
 });
 
-app.use('/api/v1/code', limiter);
+app.use('/api/v1/code/execute', limiter);
 app.get("/api/v1/health",(req:Request,res:Response)=>{
   res.send("Hello");
 })
