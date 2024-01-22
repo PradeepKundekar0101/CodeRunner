@@ -6,6 +6,7 @@ import { FaPlay } from "react-icons/fa";
 import axios from 'axios';
 import { Toaster } from 'react-hot-toast';
 import { notify } from '../utils/notify';
+import { useAppSelector } from '../app/hooks';
 const SandBox: React.FC = () => {
   const [output, setOutput] = useState<string>('');
   const [language,setLanguage] = useState<string>('javascript');
@@ -13,6 +14,8 @@ const SandBox: React.FC = () => {
   const [theme,setTheme] = useState<string>('light');
   const [fontSize,setFontSize] = useState<string>('10');
   const [running,setRunning] = useState<boolean>(false);
+  const [runTime,setRunTime] = useState<number>(0);
+  const userId = useAppSelector((state)=>{return state.auth.user?._id});
   const editorOptions = {
     selectOnLineNumbers: true,
     fontSize: Number(fontSize)
@@ -21,12 +24,42 @@ const SandBox: React.FC = () => {
   const runCode = async() => {
     try {
         setRunning(true);
-        const response = await axios.post("http://localhost:8000/api/v1/code/execute",{code,language});
-        console.log(response)
-        setRunning(false);
-        setOutput(response.data.output)
+        const response = await axios.post("http://localhost:8000/api/v1/code/execute",{code,language,userId});
+        const jobId = response.data.jobId;
+
+        const intervalId = setInterval(async()=>{
+          const {data} = await axios.get("http://localhost:8000/api/v1/code/status",{params:{jobId}})
+          console.log(data);
+          if(data.success){
+
+            const {output,startedAt,completedAt,status} = data.data.job;
+            if(status=="pending"){
+              return;
+
+            }
+            clearInterval(intervalId);
+            setOutput(output);
+            const startedAt1: Date = new Date(startedAt);
+            const completedAt1: Date = new Date(completedAt);
+
+            const durationInMilliseconds: number = completedAt1.getTime() - startedAt1.getTime();
+
+            setRunTime(durationInMilliseconds);
+            setRunning(false);
+            
+          }else{
+            clearInterval(intervalId);
+            setOutput(data.data.job.output);
+
+            setRunning(false);
+          }
+        },1000);
+
+       
+  
 
     } catch (error:any) {
+      
       setRunning(false);
       if(error.response){
         notify(error.response.data,false);
@@ -91,6 +124,7 @@ const SandBox: React.FC = () => {
       <div className='bg-black text-green-400 w-[40%]'>
         <h2>Output:</h2>
         <pre className='text-green-400'>{output}</pre>
+        <h4>Completed in {runTime} ms</h4>
       </div>
     </div>
     </>

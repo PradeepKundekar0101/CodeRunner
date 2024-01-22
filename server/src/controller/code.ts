@@ -5,6 +5,7 @@ import { ApiResponse } from "../utils/apiResponse";
 
 import Docker from 'dockerode';
 import { asyncHandler } from "../utils/asyncHandler";
+import Job from "../model/job";
 
 export const executeCode = asyncHandler(async (req: Request, res: Response) => {
     const docker = new Docker();
@@ -13,7 +14,8 @@ export const executeCode = asyncHandler(async (req: Request, res: Response) => {
     if (!code || !language) {
         throw new ApiError(400, "Code and language are required");
     }
-
+    const job = await Job.create({code,language,userId});
+    res.status(200).json({jobId:job._id});
     let image;
     let command;
 
@@ -50,17 +52,35 @@ export const executeCode = asyncHandler(async (req: Request, res: Response) => {
         AttachStderr: true,
         Cmd: command,
     };
-
-    const container = await docker.createContainer(containerConfig);
-    await container.start();
-    await container.wait();
-    const containerLogs = await container.logs({ stdout: true, stderr: true });
-    const containerResult = containerLogs.toString('utf-8').trim();
-    console.log(containerResult);
-
-    return res.status(200).json({ output: containerResult });
+    try {
+        job.startedAt = new Date();
+        const container = await docker.createContainer(containerConfig);
+        await container.start();
+        await container.wait();
+        const containerLogs = await container.logs({ stdout: true, stderr: true });
+        const containerResult = containerLogs.toString('utf-8').trim();
+        console.log(containerResult);
+        job["completedAt"] = new Date();
+        job["status"] = "success";
+        job["output"] = containerResult;
+        await job.save();
+    } catch (error:any) { 
+        job["completedAt"] = new Date();
+        job["output"] = error.message;
+        job["status"] = "failed";
+        throw new ApiError(500,JSON.stringify(error.message));
+    }
 });
 
 export const saveCode = () => {
     // Implement code saving logic if needed
 };
+export const status = asyncHandler(async (req:Request,res:Response)=>{
+    const jobId = req.query.jobId;
+    if(!jobId)
+        throw new ApiError(400,"JobId required");
+    const jobFound = await Job.findById(jobId);
+    if(!jobFound)
+        throw new ApiError(404,"Job with this id not found");
+    return res.status(200).json(new ApiResponse(200,"Success",{job:jobFound},true));
+})
