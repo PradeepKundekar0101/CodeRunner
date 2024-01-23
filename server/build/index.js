@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = require("./app");
 const dotenv_1 = __importDefault(require("dotenv"));
 const db_1 = require("./db");
+require("./workers/jobWorker");
 dotenv_1.default.config();
 const PORT = process.env.PORT || 8000;
 (0, db_1.connectDB)().then(() => {

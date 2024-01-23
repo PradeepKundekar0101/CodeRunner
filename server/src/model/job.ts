@@ -1,15 +1,16 @@
 import mongoose, { ObjectId } from "mongoose";
 
-export interface IJOb{
+export interface IJob{
+    _id:ObjectId;
     userId:ObjectId;
     status:'pending'|'failed'|'success';
-    code:String;
-    language:String
-    output:String;
+    code:string;
+    language: string
+    output:string;
     startedAt:Date;
     completedAt:Date;
 }
-const JobSchema =new mongoose.Schema<IJOb>({
+const JobSchema =new mongoose.Schema<IJob>({
     userId:{
         type:String,
         required:[true,'UserId is required'],

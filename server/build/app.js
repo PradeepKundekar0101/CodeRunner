@@ -9,6 +9,7 @@ const express_1 = __importDefault(require("express"));
 const user_routes_1 = __importDefault(require("./routes/user.routes"));
 const code_routes_1 = __importDefault(require("./routes/code.routes"));
 const express_rate_limit_1 = require("express-rate-limit");
+require("./workers/jobWorker");
 const app = (0, express_1.default)();
 exports.app = app;
 app.use((0, cors_1.default)({ origin: "*" }));

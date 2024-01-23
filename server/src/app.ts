@@ -5,6 +5,7 @@ import express, { Request, Response } from 'express';
 import userRoute from './routes/user.routes'
 import codeRoute from './routes/code.routes'
 import {rateLimit} from 'express-rate-limit'
+require("./workers/jobWorker")
 const app = express();
 app.use(cors({origin: "*" }));
 app.use(express.urlencoded({extended:true}));
