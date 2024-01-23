@@ -2,6 +2,8 @@
 import React, {  useState } from 'react';
 import MonacoEditor from '@monaco-editor/react';
 import { FaPlay } from "react-icons/fa";
+import { FaRegSave } from "react-icons/fa";
+import { GrPowerReset } from "react-icons/gr";
 
 import axios from 'axios';
 import { Toaster } from 'react-hot-toast';
@@ -74,7 +76,7 @@ const SandBox: React.FC = () => {
     <Toaster/>
      <div className='flex justify-end py-3 space-x-3 px-5 border-t-2 border-b-2 border-slate-700 bg-slate-800 '>
      <div className='flex items-center bg-slate-700 text-white py-1 px-2 rounded-md'>
-        <label htmlFor="lang">Language &nbsp;</label>
+        {/* <label htmlFor="lang">Language &nbsp;</label> */}
         <select name="lang" className='bg-slate-600 px-3 py-1 rounded-md focus:outline-none '  value={language} onChange={(e:any)=>{setLanguage(e.target.value)}} >
             <option value="vs-dark">Javascript</option>
             <option value="java">Java</option>
@@ -108,6 +110,15 @@ const SandBox: React.FC = () => {
           className='bg-green-600 flex items-center py-1 px-3 rounded-lg text-white' onClick={runCode}>
             {running?"Running...":"Run Code"}<FaPlay/>
           </button>
+          <button>
+          <FaRegSave />
+
+          </button>
+          <button>
+          <GrPowerReset />
+
+          </button>
+
       </div>
 
       <div className='flex'>
