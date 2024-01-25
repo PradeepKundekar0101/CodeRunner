@@ -1,5 +1,8 @@
 import { FaPlay, FaRegSave } from "react-icons/fa"
 import { GrPowerReset } from "react-icons/gr"
+import { CiLight } from "react-icons/ci";
+import { MdOutlineDarkMode } from "react-icons/md";
+
 interface SandBoxNavProps{
   language:string,
   setLanguage:React.Dispatch<React.SetStateAction<string>>,
@@ -26,13 +29,7 @@ const SandBoxNav:React.FC<SandBoxNavProps> = ({language,setLanguage,theme,setThe
      </div>
      
        
-     <div className='flex items-center bg-slate-700 text-white py-1 px-2 rounded-md'>
-       <label htmlFor="mode">Mode&nbsp;</label>
-       <select name="mode" className='bg-slate-600 px-3 py-1 rounded-md focus:outline-none' onChange={(e:any)=>{setTheme(e.target.value)}} value={theme}>
-         <option value="vs-dark">Dark Mode</option>
-         <option value="light">Light Mode</option>
-       </select>
-       </div>
+    
 
        <div className='flex items-center bg-slate-700 text-white py-1 px-2 rounded-md'>
        <label htmlFor="size">Font Size&nbsp;</label>
@@ -50,12 +47,19 @@ const SandBoxNav:React.FC<SandBoxNavProps> = ({language,setLanguage,theme,setThe
            {running?"Running...":"Run Code"}<FaPlay/>
          </button>
          <button>
-         <FaRegSave />
-
+         <FaRegSave fill="#fff" size={30} />
          </button>
          <button>
-         <GrPowerReset />
-
+         <GrPowerReset color="#fff" size={30}  />
+         </button>
+         <button onClick={()=>{
+          if(theme==="dark")
+          setTheme("light");
+        else setTheme("dark");
+         }}>
+          {theme==="dark"?<CiLight fill="#fff" size={30}/>
+:<MdOutlineDarkMode fill="#fff" size={30} />
+}
          </button>
 
      </div>
