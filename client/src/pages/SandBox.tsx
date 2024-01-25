@@ -1,14 +1,12 @@
 // src/CodeRunner.tsx
 import React, {  useState } from 'react';
 import MonacoEditor from '@monaco-editor/react';
-import { FaPlay } from "react-icons/fa";
-import { FaRegSave } from "react-icons/fa";
-import { GrPowerReset } from "react-icons/gr";
 
 import axios from 'axios';
 import { Toaster } from 'react-hot-toast';
 import { notify } from '../utils/notify';
 import { useAppSelector } from '../app/hooks';
+import SandBoxNav from '../components/SandBoxNav';
 const SandBox: React.FC = () => {
   const [output, setOutput] = useState<string>('');
   const [language,setLanguage] = useState<string>('javascript');
@@ -31,7 +29,6 @@ const SandBox: React.FC = () => {
 
         const intervalId = setInterval(async()=>{
           const {data} = await axios.get("http://localhost:8000/api/v1/code/status",{params:{jobId}})
-          console.log(data);
           if(data.success){
 
             const {output,startedAt,completedAt,status} = data.data.job;
@@ -74,52 +71,7 @@ const SandBox: React.FC = () => {
   return (
     <>
     <Toaster/>
-     <div className='flex justify-end py-3 space-x-3 px-5 border-t-2 border-b-2 border-slate-700 bg-slate-800 '>
-     <div className='flex items-center bg-slate-700 text-white py-1 px-2 rounded-md'>
-        {/* <label htmlFor="lang">Language &nbsp;</label> */}
-        <select name="lang" className='bg-slate-600 px-3 py-1 rounded-md focus:outline-none '  value={language} onChange={(e:any)=>{setLanguage(e.target.value)}} >
-            <option value="vs-dark">Javascript</option>
-            <option value="java">Java</option>
-            <option value="c">C</option>
-            <option value="cpp">C++</option>
-            <option value="python">Python</option>
-          </select>
-      </div>
-      
-        
-      <div className='flex items-center bg-slate-700 text-white py-1 px-2 rounded-md'>
-        <label htmlFor="mode">Mode&nbsp;</label>
-        <select name="mode" className='bg-slate-600 px-3 py-1 rounded-md focus:outline-none' onChange={(e:any)=>{setTheme(e.target.value)}} value={theme}>
-          <option value="vs-dark">Dark Mode</option>
-          <option value="light">Light Mode</option>
-        </select>
-        </div>
-
-        <div className='flex items-center bg-slate-700 text-white py-1 px-2 rounded-md'>
-        <label htmlFor="size">Font Size&nbsp;</label>
-        <select name="size" className='bg-slate-600 px-3 py-1 rounded-md focus:outline-none' onChange={(e:any)=>{setFontSize(e.target.value)}} value={fontSize}>
-          <option value="10">Small</option>
-          <option value="16">Medium</option>
-          <option value="32">Large</option>
-        </select>
-        </div>
-       
-
-        <button
-          disabled={running} 
-          className='bg-green-600 flex items-center py-1 px-3 rounded-lg text-white' onClick={runCode}>
-            {running?"Running...":"Run Code"}<FaPlay/>
-          </button>
-          <button>
-          <FaRegSave />
-
-          </button>
-          <button>
-          <GrPowerReset />
-
-          </button>
-
-      </div>
+   <SandBoxNav fontSize={fontSize} setFontSize={setFontSize} code={code} theme={theme} setTheme={setTheme} running={running} setCode={setCode} />
 
       <div className='flex'>
       <MonacoEditor
