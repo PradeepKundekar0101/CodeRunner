@@ -5,8 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const code_1 = require("../controller/code");
+const authMiddleware_1 = require("../middleware/authMiddleware");
 const router = express_1.default.Router();
-router.post('/execute', code_1.executeCode);
-router.post('/save', code_1.saveCode);
+router.post('/execute', authMiddleware_1.authMiddleware, code_1.executeCode);
 router.get("/status", code_1.status);
+router.post("/create", code_1.createFile);
+router.patch('/save', code_1.saveCode);
 exports.default = router;

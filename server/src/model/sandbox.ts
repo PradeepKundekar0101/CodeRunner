@@ -3,22 +3,28 @@ export interface ISandBox{
     code:string
     output:string
     userId: ObjectId
+    title:string
 }
 const SandBoxSchema = new mongoose.Schema<ISandBox>({
     code:{
         type:String,
         min:3,
-        required:true
+        required:true,
+        default:""
     },
     output:{
         type:String,
-        min:3,
-        required:true
+        required:true,
+        default:""
     },
     userId:{
         type:mongoose.Types.ObjectId,
         ref:"User",
         required:[true,"User id is required"]
+    },
+    title:{
+        type:String,
+        min:3
     }
 });
-export const sandBox = mongoose.model("SandBox",SandBoxSchema);
+export const SandBox = mongoose.model("SandBox",SandBoxSchema);
