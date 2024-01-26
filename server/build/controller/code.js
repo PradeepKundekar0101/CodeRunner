@@ -12,12 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.status = exports.saveCode = exports.executeCode = void 0;
+exports.saveCode = exports.createFile = exports.status = exports.executeCode = void 0;
 const apiError_1 = require("../utils/apiError");
 const apiResponse_1 = require("../utils/apiResponse");
 const asyncHandler_1 = require("../utils/asyncHandler");
 const job_1 = __importDefault(require("../model/job"));
 const bullmq_1 = require("bullmq");
+const sandbox_1 = require("../model/sandbox");
 const jobQueue = new bullmq_1.Queue("jobQueue", {
     connection: {
         host: "0.0.0.0",
@@ -25,7 +26,8 @@ const jobQueue = new bullmq_1.Queue("jobQueue", {
     }
 });
 exports.executeCode = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { code, userId, language } = req.body;
+    const { code, language } = req.body;
+    const userId = req.user._id;
     if (!code || !language) {
         throw new apiError_1.ApiError(400, "Code and language are required");
     }
@@ -34,10 +36,6 @@ exports.executeCode = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(v
     console.log("Adding job in queue");
     jobQueue.add("job", job);
 }));
-const saveCode = () => {
-    // Implement code saving logic if needed
-};
-exports.saveCode = saveCode;
 exports.status = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const jobId = req.query.jobId;
     if (!jobId)
@@ -47,3 +45,13 @@ exports.status = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0
         throw new apiError_1.ApiError(404, "Job with this id not found");
     return res.status(200).json(new apiResponse_1.ApiResponse(200, "Success", { job: jobFound }, true));
 }));
+exports.createFile = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = req.user;
+    const title = req.body.title;
+    const sandBox = yield sandbox_1.SandBox.create({ userId: user._id, title });
+    return res.status(200).json(new apiResponse_1.ApiResponse(201, "Success", { sandBox }, true));
+}));
+const saveCode = () => {
+    // Implement code saving logic if needed
+};
+exports.saveCode = saveCode;

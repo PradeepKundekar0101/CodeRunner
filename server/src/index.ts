@@ -1,7 +1,7 @@
 import { app } from './app';
 import dotenv from 'dotenv'
 import {connectDB} from './db'
-require("./workers/jobWorker")
+
 dotenv.config();
 const PORT = process.env.PORT || 8000;
 connectDB().then(()=>{

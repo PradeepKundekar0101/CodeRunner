@@ -1,23 +1,25 @@
-// src/CodeRunner.tsx
 import React, { useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
-
 import axios from "axios";
 import { Toaster } from "react-hot-toast";
 import { notify } from "../utils/notify";
 import { useAppSelector } from "../app/hooks";
 import SandBoxNav from "../components/SandBoxNav";
+
 const SandBox: React.FC = () => {
   const [output, setOutput] = useState<string>("");
   const [language, setLanguage] = useState<string>("javascript");
   const [code, setCode] = useState<string>("");
-  const [theme, setTheme] = useState<string>("dark");
+  const [theme, setTheme] = useState<string>("vs-dark");
   const [fontSize, setFontSize] = useState<string>("10");
   const [running, setRunning] = useState<boolean>(false);
   const [runTime, setRunTime] = useState<number>(0);
+
+
   const userId = useAppSelector((state) => {
     return state.auth.user?._id;
   });
+
   const editorOptions = {
     selectOnLineNumbers: true,
     fontSize: Number(fontSize),
@@ -67,6 +69,8 @@ const SandBox: React.FC = () => {
   return (
     <>
       <Toaster />
+     
+      
       <SandBoxNav
         runCode={runCode}
         fontSize={fontSize}
@@ -78,10 +82,12 @@ const SandBox: React.FC = () => {
         setCode={setCode}
         language={language}
         setLanguage={setLanguage}
+        
       />
 
       <div className="flex">
         <MonacoEditor
+
           height="100vh"
           width="70vw"
           options={editorOptions}

@@ -4,7 +4,8 @@ import { ApiError } from "../utils/apiError";
 import { ApiResponse } from "../utils/apiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
 import Job from "../model/job";
-import {Queue} from 'bullmq';
+import {Queue, tryCatch} from 'bullmq';
+import { SandBox } from "../model/sandbox";
 
 const jobQueue = new Queue("jobQueue",{
     connection:{
@@ -14,7 +15,8 @@ const jobQueue = new Queue("jobQueue",{
 });
 
 export const executeCode = asyncHandler(async (req: Request, res: Response) => {
-    const { code, userId, language } = req.body;
+    const { code,language } = req.body;
+    const userId = req.user._id;
     if (!code || !language) {
         throw new ApiError(400, "Code and language are required");
     }
@@ -24,9 +26,7 @@ export const executeCode = asyncHandler(async (req: Request, res: Response) => {
     jobQueue.add("job",job);
 });
 
-export const saveCode = () => {
-    // Implement code saving logic if needed
-};
+
 export const status = asyncHandler(async (req:Request,res:Response)=>{
     const jobId = req.query.jobId;
     if(!jobId)
@@ -36,3 +36,13 @@ export const status = asyncHandler(async (req:Request,res:Response)=>{
         throw new ApiError(404,"Job with this id not found");
     return res.status(200).json(new ApiResponse(200,"Success",{job:jobFound},true));
 })
+
+export const createFile = asyncHandler(async (req:Request,res:Response)=>{
+    const user = req.user;
+    const title = req.body.title;
+    const sandBox = await SandBox.create({userId:user._id,title});
+    return res.status(200).json(new ApiResponse(201,"Success",{sandBox},true));
+})
+export const saveCode = () => {
+    // Implement code saving logic if needed
+};
