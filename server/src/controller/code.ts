@@ -43,6 +43,18 @@ export const createFile = asyncHandler(async (req:Request,res:Response)=>{
     const sandBox = await SandBox.create({userId:user._id,title});
     return res.status(200).json(new ApiResponse(201,"Success",{sandBox},true));
 })
-export const saveCode = () => {
-    // Implement code saving logic if needed
-};
+export const saveCode = asyncHandler(async (req:Request,res:Response)=>{
+    const user = req.user;
+    const code = req.body.code;
+    const language = req.body.language;
+    const fileId= req.params.fileId;
+    const sandBox = await SandBox.findByIdAndUpdate(fileId, {code,language});
+    return res.status(200).json(new ApiResponse(201,"Success",{sandBox},true));
+})
+
+export const getFileById = asyncHandler(async (req:Request,res:Response)=>{
+    const user = req.user;
+    const fileId= req.params.fileId;
+    const sandBox = await SandBox.findById(fileId);
+    return res.status(200).json(new ApiResponse(201,"Success",{sandBox},true));
+})

@@ -1,8 +1,10 @@
 import { FaPlay, FaRegSave } from "react-icons/fa";
-
 import { CiLight } from "react-icons/ci";
 import { MdOutlineDarkMode } from "react-icons/md";
-import { useState } from "react";
+import { useAppSelector } from "../app/hooks";
+import { notify } from "../utils/notify";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 interface SandBoxNavProps {
   language: string;
@@ -25,10 +27,24 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
   setFontSize,
   running,
   runCode,
+  code
 }) => {
-
-  const handleSave = async()=>{
-
+  const token = useAppSelector((state)=>{return state.auth.token});
+  const {fileId} = useParams();
+  const handleSave = async(e:any)=>{
+    e.preventDefault();
+    try {
+      if(!token){
+        notify("Not allowed",false);
+        return;
+      }
+      await axios.patch(`http://localhost:8000/api/v1/code/save/${fileId}`,{code,language},{headers:{
+          "Authorization":token
+        }});
+        notify("saved!",true);
+    } catch (error:any) {
+     notify(error.message,false);
+    }
   }
   return (
     <div className="flex justify-end py-3 space-x-3 px-5 border-t-2 border-b-2 border-slate-700 bg-slate-800 ">
