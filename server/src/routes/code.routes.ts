@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.post('/execute',authMiddleware,executeCode);
 router.get("/status",status);
-router.post("/create",createFile);
+router.post("/create",authMiddleware,createFile);
 router.patch('/save',saveCode);
 export default router

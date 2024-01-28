@@ -9,6 +9,6 @@ const authMiddleware_1 = require("../middleware/authMiddleware");
 const router = express_1.default.Router();
 router.post('/execute', authMiddleware_1.authMiddleware, code_1.executeCode);
 router.get("/status", code_1.status);
-router.post("/create", code_1.createFile);
+router.post("/create", authMiddleware_1.authMiddleware, code_1.createFile);
 router.patch('/save', code_1.saveCode);
 exports.default = router;

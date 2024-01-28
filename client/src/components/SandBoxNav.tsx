@@ -26,7 +26,10 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
   running,
   runCode,
 }) => {
-  const [showInput,setShowInput] = useState<boolean>(false);
+
+  const handleSave = async()=>{
+
+  }
   return (
     <div className="flex justify-end py-3 space-x-3 px-5 border-t-2 border-b-2 border-slate-700 bg-slate-800 ">
       <div className="flex items-center bg-slate-700 text-white py-1 px-2 rounded-md">
@@ -75,7 +78,7 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
       <button className="text-white mx-1">Cancel</button>
       </div>
      
-      <button onClick={()=>{}}>
+      <button onClick={handleSave}>
         <FaRegSave fill="#fff"   size={30} />
       </button>
 

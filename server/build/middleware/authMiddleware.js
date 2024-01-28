@@ -15,14 +15,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.authMiddleware = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const apiError_1 = require("../utils/apiError");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const JWT_SECRET = process.env.JWT_SECRET || '';
 const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     try {
-        const token = (_a = req.header('Authorization')) === null || _a === void 0 ? void 0 : _a.replace('Bearer ', '');
+        const token = req.header('Authorization');
         if (!token) {
             throw new apiError_1.ApiError(401, 'Unauthorized - Missing token');
         }
-        const decoded = jsonwebtoken_1.default.verify(token, 'your-secret-key');
+        const decoded = jsonwebtoken_1.default.verify(token, JWT_SECRET);
         req.user = decoded;
         next();
     }
