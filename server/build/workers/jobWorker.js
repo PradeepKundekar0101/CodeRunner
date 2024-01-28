@@ -22,8 +22,6 @@ const worker = new bullmq_1.Worker("jobQueue", (job) => __awaiter(void 0, void 0
     let command;
     const data = job.data;
     const { language, code } = data;
-    console.log(code);
-    console.log(language);
     if (!code || !language) {
         throw new apiError_1.ApiError(400, "Code and language are required");
     }

@@ -9,12 +9,10 @@ const SandBoxSchema = new mongoose_1.default.Schema({
     code: {
         type: String,
         min: 3,
-        required: true,
         default: ""
     },
     output: {
         type: String,
-        required: true,
         default: ""
     },
     userId: {

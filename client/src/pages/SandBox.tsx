@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
 import axios from "axios";
 import { Toaster } from "react-hot-toast";
 import { notify } from "../utils/notify";
 import { useAppSelector } from "../app/hooks";
 import SandBoxNav from "../components/SandBoxNav";
+import { useParams } from "react-router-dom";
 
 const SandBox: React.FC = () => {
   const [output, setOutput] = useState<string>("");
@@ -14,7 +15,20 @@ const SandBox: React.FC = () => {
   const [fontSize, setFontSize] = useState<string>("10");
   const [running, setRunning] = useState<boolean>(false);
   const [runTime, setRunTime] = useState<number>(0);
-
+  const token = useAppSelector((state)=>{return state.auth.token});
+  const {fileId} = useParams();
+  useEffect(() => {
+    fetchData();
+  }, [])
+  const fetchData = async ()=>{
+      try {
+          const response = await axios.get(`http://localhost:8000/api/v1/code/${fileId}`,{headers:{"Authorization":token}});
+          console.log(response.data.data.sandBox.code);
+          setCode(response.data.data.sandBox.code);
+      } catch (error) {
+        console.log(error)
+      }
+  }  
 
   const userId = useAppSelector((state) => {
     return state.auth.user?._id;
@@ -82,12 +96,13 @@ const SandBox: React.FC = () => {
         setCode={setCode}
         language={language}
         setLanguage={setLanguage}
+
         
       />
 
       <div className="flex">
         <MonacoEditor
-
+        value={code}
           height="100vh"
           width="70vw"
           options={editorOptions}

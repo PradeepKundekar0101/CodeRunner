@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.saveCode = exports.createFile = exports.status = exports.executeCode = void 0;
+exports.getFileById = exports.saveCode = exports.createFile = exports.status = exports.executeCode = void 0;
 const apiError_1 = require("../utils/apiError");
 const apiResponse_1 = require("../utils/apiResponse");
 const asyncHandler_1 = require("../utils/asyncHandler");
@@ -51,7 +51,17 @@ exports.createFile = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(vo
     const sandBox = yield sandbox_1.SandBox.create({ userId: user._id, title });
     return res.status(200).json(new apiResponse_1.ApiResponse(201, "Success", { sandBox }, true));
 }));
-const saveCode = () => {
-    // Implement code saving logic if needed
-};
-exports.saveCode = saveCode;
+exports.saveCode = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = req.user;
+    const code = req.body.code;
+    const language = req.body.language;
+    const fileId = req.params.fileId;
+    const sandBox = yield sandbox_1.SandBox.findByIdAndUpdate(fileId, { code, language });
+    return res.status(200).json(new apiResponse_1.ApiResponse(201, "Success", { sandBox }, true));
+}));
+exports.getFileById = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = req.user;
+    const fileId = req.params.fileId;
+    const sandBox = yield sandbox_1.SandBox.findById(fileId);
+    return res.status(200).json(new apiResponse_1.ApiResponse(201, "Success", { sandBox }, true));
+}));

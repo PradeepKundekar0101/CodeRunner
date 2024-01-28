@@ -8,16 +8,19 @@ import Layout from './components/Layout'
 import { useAppSelector } from './app/hooks'
 import Hello from './pages/Hello'
 import SandBox from './pages/SandBox'
+import CreateFile from './pages/CreateFile'
 
 function App() {
   const user = useAppSelector((state)=>{return state.auth.user});
   const router = createBrowserRouter(createRoutesFromElements(
     <Route path='/' element={<Layout/>}>
         <Route path='' element={user?<Home user={user}/>:<Hello/>}/>
-         <Route path='signin' element={!user?<SignIn/>:<Navigate to="/"/>}/>
+        <Route path='signin' element={!user?<SignIn/>:<Navigate to="/"/>}/>
         <Route path='signup' element={!user?<SignUp/>:<Navigate to="/"/>}/>
         <Route path='sandbox' element={user?<SandBox/>:<Navigate to="/sandbox"/>}/>
-        <Route path='/notfound' element={<NotFound/>}/>
+        <Route path='sandbox/create' element={user?<CreateFile/>:<Navigate to="/"/>}/>
+        <Route path="sandbox/:userId/:fileId" element={user?<SandBox/>:<Navigate to="/sandbox"/>}/>
+        <Route path='*' element={<NotFound/>}/>
     </Route>
   ))  
   return (

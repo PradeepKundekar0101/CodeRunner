@@ -8,8 +8,7 @@ const worker = new Worker("jobQueue",async (job)=>{
     let command:string[];
     const data:IJob = job.data;
     const {language,code} = data;
-    console.log(code);
-    console.log(language)
+
     if (!code || !language) {
         throw new ApiError(400, "Code and language are required");
     }
