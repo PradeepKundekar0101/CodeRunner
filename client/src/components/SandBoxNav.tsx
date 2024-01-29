@@ -89,11 +89,7 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
         {running ? "Running..." : "Run Code"}
         <FaPlay />
       </button>
-      <div className="flex items-center justify-center">
-      <input type="text" placeholder="Title" className="rounded-xl h-full px-2"/>
-      <button className="text-white mx-1">Cancel</button>
-      </div>
-     
+    
       <button onClick={handleSave}>
         <FaRegSave fill="#fff"   size={30} />
       </button>
