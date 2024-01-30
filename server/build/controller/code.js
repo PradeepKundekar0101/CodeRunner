@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFileById = exports.saveCode = exports.createFile = exports.status = exports.executeCode = void 0;
+exports.getFilesByUserId = exports.getFileById = exports.saveCode = exports.createFile = exports.status = exports.executeCode = void 0;
 const apiError_1 = require("../utils/apiError");
 const apiResponse_1 = require("../utils/apiResponse");
 const asyncHandler_1 = require("../utils/asyncHandler");
@@ -64,4 +64,10 @@ exports.getFileById = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(v
     const fileId = req.params.fileId;
     const sandBox = yield sandbox_1.SandBox.findById(fileId);
     return res.status(200).json(new apiResponse_1.ApiResponse(201, "Success", { sandBox }, true));
+}));
+exports.getFilesByUserId = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.params.userId;
+    const files = yield sandbox_1.SandBox.find({ userId });
+    console.log(files);
+    return res.status(200).json(new apiResponse_1.ApiResponse(201, "Success", { files }, true));
 }));

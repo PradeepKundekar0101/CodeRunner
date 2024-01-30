@@ -12,6 +12,7 @@ export const authMiddleware = async (req:Request, res: Response, next: NextFunct
         }
         const decoded = jwt.verify(token, JWT_SECRET); 
         req.user = decoded;
+        console.log(decoded)
         next();
     } catch (error) {
         next(new ApiError(401, 'Unauthorized'));
