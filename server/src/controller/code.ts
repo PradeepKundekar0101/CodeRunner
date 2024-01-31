@@ -49,7 +49,7 @@ export const saveCode = asyncHandler(async (req:Request,res:Response)=>{
     const language = req.body.language;
     const fileId= req.params.fileId;
     const sandBox = await SandBox.findByIdAndUpdate(fileId, {code,language});
-    return res.status(200).json(new ApiResponse(201,"Success",{sandBox},true));
+    return res.status(200).json(new ApiResponse(201,"Success",{sandBox},true))
 })
 
 export const getFileById = asyncHandler(async (req:Request,res:Response)=>{
@@ -60,8 +60,7 @@ export const getFileById = asyncHandler(async (req:Request,res:Response)=>{
 })
 
 export const getFilesByUserId = asyncHandler(async (req:Request,res:Response)=>{
-    const userId= req.params.userId;
-    const files = await SandBox.find({userId});
-    console.log(files)
+    const user= req.user;
+    const files = await SandBox.find({userId:user._id});
     return res.status(200).json(new ApiResponse(201,"Success",{files},true));
 })

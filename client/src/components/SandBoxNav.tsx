@@ -5,7 +5,7 @@ import { useAppSelector } from "../app/hooks";
 import { notify } from "../utils/notify";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-
+import useAxios from '../service/axios';
 interface SandBoxNavProps {
   language: string;
   setLanguage: React.Dispatch<React.SetStateAction<string>>;
@@ -29,18 +29,12 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
   runCode,
   code
 }) => {
-  const token = useAppSelector((state)=>{return state.auth.token});
+  const axios = useAxios();
   const {fileId} = useParams();
   const handleSave = async(e:any)=>{
     e.preventDefault();
     try {
-      if(!token){
-        notify("Not allowed",false);
-        return;
-      }
-      await axios.patch(`http://localhost:8000/api/v1/code/save/${fileId}`,{code,language},{headers:{
-          "Authorization":token
-        }});
+      await axios.patch(`/api/v1/code/save/${fileId}`,{code,language});
         notify("saved!",true);
     } catch (error:any) {
      notify(error.message,false);

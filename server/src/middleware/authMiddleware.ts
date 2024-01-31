@@ -7,6 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET || '';
 export const authMiddleware = async (req:Request, res: Response, next: NextFunction) => {
     try {
         const token = req.header('Authorization');
+        console.log(token)
         if (!token) {
             throw new ApiError(401, 'Unauthorized - Missing token');
         }

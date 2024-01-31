@@ -22,7 +22,7 @@ const SandBox: React.FC = () => {
   }, [])
   const fetchData = async ()=>{
       try {
-          const response = await axios.get(`http://localhost:8000/api/v1/code/${fileId}`,{headers:{"Authorization":token}});
+          const response = await axios.get(`http://localhost:8000/api/v1/code/file/${fileId}`,{headers:{"Authorization":token}});
           console.log(response.data.data.sandBox.code);
           setCode(response.data.data.sandBox.code);
       } catch (error) {
