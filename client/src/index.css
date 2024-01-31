@@ -10,3 +10,14 @@
     @apply border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-white block w-full p-2.5 bg-slate-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:outline-none
  }
 }
+.heading{
+   font-size: 4rem; 
+   font-weight: bold;
+   text-transform: capitalize;
+   background-color: #FA8BFF;
+   background-image: linear-gradient(45deg, #FA8BFF 0%, #2BD2FF 52%, #2BFF88 90%);
+   
+   -webkit-text-fill-color: transparent;
+   -webkit-background-clip: text;
+   background-position:top;
+}
