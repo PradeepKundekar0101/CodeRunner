@@ -23,6 +23,10 @@ const SandBoxSchema = new mongoose_1.default.Schema({
     title: {
         type: String,
         min: 3
+    },
+    language: {
+        type: String,
+        default: ""
     }
 });
 exports.SandBox = mongoose_1.default.model("SandBox", SandBoxSchema);

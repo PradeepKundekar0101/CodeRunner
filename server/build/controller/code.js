@@ -67,8 +67,6 @@ exports.getFileById = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(v
 }));
 exports.getFilesByUserId = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
-    console.log(user);
     const files = yield sandbox_1.SandBox.find({ userId: user._id });
-    console.log(files);
     return res.status(200).json(new apiResponse_1.ApiResponse(201, "Success", { files }, true));
 }));
