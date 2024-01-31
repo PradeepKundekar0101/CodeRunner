@@ -5,10 +5,10 @@ const router = express.Router();
 
 
 router.post('/execute',authMiddleware,executeCode);
-router.get("/:fileId",authMiddleware,getFileById);
+router.get("/file/:fileId",authMiddleware,getFileById);
 router.get("/status",status);
 router.post("/create",authMiddleware,createFile);
 router.patch('/save/:fileId',authMiddleware,saveCode);
 
-router.get("/user/:userId",authMiddleware,getFilesByUserId);
+router.get("/user",authMiddleware,getFilesByUserId);
 export default router
