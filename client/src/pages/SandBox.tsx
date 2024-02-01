@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
-import axios from "axios";
 import { Toaster } from "react-hot-toast";
 import { notify } from "../utils/notify";
 import { useAppSelector } from "../app/hooks";
 import SandBoxNav from "../components/SandBoxNav";
 import { useParams } from "react-router-dom";
-
+import useAxios from "../service/axios";
 const SandBox: React.FC = () => {
   const [output, setOutput] = useState<string>("");
   const [language, setLanguage] = useState<string>("javascript");
@@ -15,17 +14,17 @@ const SandBox: React.FC = () => {
   const [fontSize, setFontSize] = useState<string>("10");
   const [running, setRunning] = useState<boolean>(false);
   const [runTime, setRunTime] = useState<number>(0);
-  const token = useAppSelector((state)=>{return state.auth.token});
   const {fileId} = useParams();
   useEffect(() => {
     fetchData();
   }, [])
+  const axios = useAxios();
   const fetchData = async ()=>{
       try {
-          const response = await axios.get(`http://localhost:8000/api/v1/code/file/${fileId}`,{headers:{"Authorization":token}});
-          console.log(response.data.data.sandBox.code);
+          const response = await axios.get(`/api/v1/code/file/${fileId}`);
           setCode(response.data.data.sandBox.code);
-      } catch (error) {
+      } catch (error:any) {
+        notify(error.response.data.message,false);
         console.log(error)
       }
   }  
@@ -42,14 +41,14 @@ const SandBox: React.FC = () => {
     try {
       setRunning(true);
       const response = await axios.post(
-        "http://localhost:8000/api/v1/code/execute",
+        "/api/v1/code/execute",
         { code, language, userId }
       );
       const jobId = response.data.jobId;
 
       const intervalId = setInterval(async () => {
         const { data } = await axios.get(
-          "http://localhost:8000/api/v1/code/status",
+          "/api/v1/code/status",
           { params: { jobId } }
         );
         if (data.success) {
