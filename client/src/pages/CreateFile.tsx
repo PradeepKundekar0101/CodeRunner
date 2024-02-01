@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useAppSelector } from '../app/hooks';
 import { notify } from '../utils/notify';
 import { useNavigate } from 'react-router-dom';
-import useAxios from '../service/axios';
+import useAxios from '../hooks/useAxios';
 import { Toaster } from 'react-hot-toast';
 const CreateFile = () => {
     const [title,setTitle] = useState<string>("");

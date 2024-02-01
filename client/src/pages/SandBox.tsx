@@ -82,8 +82,6 @@ const SandBox: React.FC = () => {
   return (
     <>
       <Toaster />
-     
-      
       <SandBoxNav
         runCode={runCode}
         fontSize={fontSize}
@@ -95,8 +93,6 @@ const SandBox: React.FC = () => {
         setCode={setCode}
         language={language}
         setLanguage={setLanguage}
-
-        
       />
 
       <div className="flex">
