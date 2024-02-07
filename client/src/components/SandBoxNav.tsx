@@ -1,11 +1,9 @@
 import { FaPlay, FaRegSave } from "react-icons/fa";
 import { CiLight } from "react-icons/ci";
 import { MdOutlineDarkMode } from "react-icons/md";
-import { useAppSelector } from "../app/hooks";
 import { notify } from "../utils/notify";
-import axios from "axios";
 import { useParams } from "react-router-dom";
-import useAxios from '../service/axios';
+import useAxios from '../hooks/useAxios';
 interface SandBoxNavProps {
   language: string;
   setLanguage: React.Dispatch<React.SetStateAction<string>>;

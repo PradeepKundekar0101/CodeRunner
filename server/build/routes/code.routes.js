@@ -13,4 +13,5 @@ router.get("/status", code_1.status);
 router.post("/create", authMiddleware_1.authMiddleware, code_1.createFile);
 router.patch('/save/:fileId', authMiddleware_1.authMiddleware, code_1.saveCode);
 router.get("/user", authMiddleware_1.authMiddleware, code_1.getFilesByUserId);
+router.delete("/:fileId", authMiddleware_1.authMiddleware, code_1.deleteFileById);
 exports.default = router;

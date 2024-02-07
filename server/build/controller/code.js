@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFilesByUserId = exports.getFileById = exports.saveCode = exports.createFile = exports.status = exports.executeCode = void 0;
+exports.deleteFileById = exports.getFilesByUserId = exports.getFileById = exports.saveCode = exports.createFile = exports.status = exports.executeCode = void 0;
 const apiError_1 = require("../utils/apiError");
 const apiResponse_1 = require("../utils/apiResponse");
 const asyncHandler_1 = require("../utils/asyncHandler");
@@ -69,4 +69,13 @@ exports.getFilesByUserId = (0, asyncHandler_1.asyncHandler)((req, res) => __awai
     const user = req.user;
     const files = yield sandbox_1.SandBox.find({ userId: user._id });
     return res.status(200).json(new apiResponse_1.ApiResponse(201, "Success", { files }, true));
+}));
+exports.deleteFileById = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const fileId = req.params.fileId;
+    if (!fileId)
+        throw new apiError_1.ApiError(400, "Provide fileId");
+    const file = yield sandbox_1.SandBox.findByIdAndDelete(fileId);
+    if (!file)
+        throw new apiError_1.ApiError(404, "File not found");
+    return res.status(200).json(new apiResponse_1.ApiResponse(200, "Success", { file }, true));
 }));
