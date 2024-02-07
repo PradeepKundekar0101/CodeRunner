@@ -9,24 +9,24 @@ const SandBoxSchema = new mongoose_1.default.Schema({
     code: {
         type: String,
         min: 3,
-        default: ""
+        default: "",
     },
     output: {
         type: String,
-        default: ""
+        default: "",
     },
     userId: {
         type: mongoose_1.default.Types.ObjectId,
         ref: "User",
-        required: [true, "User id is required"]
+        required: [true, "User id is required"],
     },
     title: {
         type: String,
-        min: 3
+        min: 3,
     },
     language: {
         type: String,
-        default: ""
-    }
-});
+        default: "",
+    },
+}, { timestamps: true });
 exports.SandBox = mongoose_1.default.model("SandBox", SandBoxSchema);

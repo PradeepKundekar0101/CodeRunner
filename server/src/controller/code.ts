@@ -26,7 +26,6 @@ export const executeCode = asyncHandler(async (req: Request, res: Response) => {
     jobQueue.add("job",job);
 });
 
-
 export const status = asyncHandler(async (req:Request,res:Response)=>{
     const jobId = req.query.jobId;
     if(!jobId)
@@ -63,4 +62,14 @@ export const getFilesByUserId = asyncHandler(async (req:Request,res:Response)=>{
     const user= req.user;
     const files = await SandBox.find({userId:user._id});
     return res.status(200).json(new ApiResponse(201,"Success",{files},true));
+})
+
+export const deleteFileById = asyncHandler(async(req:Request,res:Response)=>{
+    const fileId = req.params.fileId;
+    if(!fileId)
+        throw new ApiError(400,"Provide fileId");
+    const file = await SandBox.findByIdAndDelete(fileId);
+    if(!file)
+        throw new ApiError(404,"File not found");
+    return res.status(200).json(new ApiResponse(200,"Success",{file},true));
 })

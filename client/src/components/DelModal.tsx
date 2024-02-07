@@ -1,4 +1,6 @@
+import { Toaster } from "react-hot-toast";
 import useAxios from "../hooks/useAxios";
+import { notify } from "../utils/notify";
 const DelModal = ({
   setShowDelModal,
   fileSelected,
@@ -9,12 +11,17 @@ const DelModal = ({
   const axios = useAxios();
   const handleDelete = async () => {
     try {
-        console.log(fileSelected);
+        await axios.delete("/api/v1/code/"+fileSelected);
+        notify("Deleted!",true);
         setShowDelModal(false);
-    //   await axios.delete("/api/v1/code/"+fileSelected);
-    } catch (error) {}
+    } catch (error:any) {
+        notify(error.response.data.message,false);
+        setShowDelModal(false);
+    }
   };
   return (
+    <>
+<Toaster/>
     <div
       id="default-modal"
       aria-hidden="true"
@@ -78,6 +85,7 @@ const DelModal = ({
         </div>
       </div>
     </div>
+    </>
   );
 };
 
