@@ -13,7 +13,7 @@ const AllSandBoxs = () => {
   const axios = useAxios();
   const fetchAllFiles = async () => {
     try {
-      const response = await axios.get(`/api/v1/code/user`);
+      const response = await axios.get(`code/user`);
       setFiles(response.data.data.files);
     } catch (error: any) {
       notify(error.response.data.message, false);

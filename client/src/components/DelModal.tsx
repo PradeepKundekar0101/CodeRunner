@@ -11,7 +11,7 @@ const DelModal = ({
   const axios = useAxios();
   const handleDelete = async () => {
     try {
-        await axios.delete("/api/v1/code/"+fileSelected);
+        await axios.delete("code/"+fileSelected);
         notify("Deleted!",true);
         setShowDelModal(false);
     } catch (error:any) {

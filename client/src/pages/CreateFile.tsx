@@ -22,7 +22,7 @@ const CreateFile = () => {
             notify("Title is too short",false);
             return;
           }
-            const response = await axios.post("/api/v1/code/create",{title});
+            const response = await axios.post("code/create",{title});
             navigate(`/sandbox/${user?._id}/${response.data.data.sandBox._id}`);
         } catch (error:any) {
          notify(error.message,false);
