@@ -1,12 +1,17 @@
 import { Toaster } from "react-hot-toast";
 import useAxios from "../hooks/useAxios";
 import { notify } from "../utils/notify";
+import { File } from "../types/code";
 const DelModal = ({
   setShowDelModal,
   fileSelected,
+  setFiles,
+  files
 }: {
   setShowDelModal: React.Dispatch<React.SetStateAction<boolean>>,
-  fileSelected:string
+  fileSelected:string,
+  setFiles:React.Dispatch<React.SetStateAction<File[]>>,
+  files: File[]
 }) => {
   const axios = useAxios();
   const handleDelete = async () => {
@@ -14,6 +19,10 @@ const DelModal = ({
         await axios.delete("code/"+fileSelected);
         notify("Deleted!",true);
         setShowDelModal(false);
+        console.log(files);
+        const updateFiles = files.filter((file)=>{return file._id!=fileSelected});
+        console.log(updateFiles)
+        setFiles(updateFiles);
     } catch (error:any) {
         notify(error.response.data.message,false);
         setShowDelModal(false);
