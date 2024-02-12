@@ -5,7 +5,7 @@ import { notify } from "../utils/notify";
 import { useAppSelector } from "../app/hooks";
 import SandBoxNav from "../components/SandBoxNav";
 import { useParams } from "react-router-dom";
-import useAxios from "../service/axios";
+import useAxios from '../hooks/useAxios'
 const SandBox: React.FC = () => {
   const [output, setOutput] = useState<string>("");
   const [language, setLanguage] = useState<string>("javascript");
@@ -21,7 +21,7 @@ const SandBox: React.FC = () => {
   const axios = useAxios();
   const fetchData = async ()=>{
       try {
-          const response = await axios.get(`/api/v1/code/file/${fileId}`);
+          const response = await axios.get(`code/file/${fileId}`);
           setCode(response.data.data.sandBox.code);
       } catch (error:any) {
         notify(error.response.data.message,false);
@@ -41,14 +41,14 @@ const SandBox: React.FC = () => {
     try {
       setRunning(true);
       const response = await axios.post(
-        "/api/v1/code/execute",
+        "code/execute",
         { code, language, userId }
       );
       const jobId = response.data.jobId;
 
       const intervalId = setInterval(async () => {
         const { data } = await axios.get(
-          "/api/v1/code/status",
+          "code/status",
           { params: { jobId } }
         );
         if (data.success) {

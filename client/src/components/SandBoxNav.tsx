@@ -32,7 +32,7 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
   const handleSave = async(e:any)=>{
     e.preventDefault();
     try {
-      await axios.patch(`/api/v1/code/save/${fileId}`,{code,language});
+      await axios.patch(`code/save/${fileId}`,{code,language});
         notify("saved!",true);
     } catch (error:any) {
      notify(error.message,false);

@@ -1,8 +1,7 @@
-
 import { useState } from 'react'
 import { useAppSelector } from '../app/hooks';
 import { notify } from '../utils/notify';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useAxios from '../hooks/useAxios';
 import { Toaster } from 'react-hot-toast';
 const CreateFile = () => {
@@ -22,7 +21,7 @@ const CreateFile = () => {
             notify("Title is too short",false);
             return;
           }
-            const response = await axios.post("/api/v1/code/create",{title});
+            const response = await axios.post("code/create",{title});
             navigate(`/sandbox/${user?._id}/${response.data.data.sandBox._id}`);
         } catch (error:any) {
          notify(error.message,false);
@@ -39,7 +38,10 @@ const CreateFile = () => {
 
                 <input 
                   type="submit" value="Let's Go" className='inline-flex items-center w-full px-5 py-3 mb-3 mr-1 text-base font-semibold text-white no-underline align-middle bg-blue-600 border border-transparent border-solid rounded-md cursor-pointer select-none sm:mb-0 sm:w-auto hover:bg-blue-700 hover:border-blue-700 hover:text-white focus-within:bg-blue-700 focus-within:border-blue-700'/>
+           
             </form>
+            <Link className='text-white' to={"/"}>Back</Link>
+            
         </div>
     </div>
   )

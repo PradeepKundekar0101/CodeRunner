@@ -60,7 +60,15 @@ const worker = new bullmq_1.Worker("jobQueue", (job) => __awaiter(void 0, void 0
         data.startedAt = new Date();
         const container = yield docker.createContainer(containerConfig);
         yield container.start();
-        yield container.wait();
+        // Use Promise.race to enforce the time limit
+        const executionPromise = container.wait();
+        const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => {
+                reject(new apiError_1.ApiError(500, "Time Limit Exceeded, Maximum 5 Seconds"));
+            }, 5000);
+        });
+        // Wait for either the execution to complete or the timeout to occur
+        yield Promise.race([executionPromise, timeoutPromise]);
         const containerLogs = yield container.logs({ stdout: true, stderr: true });
         const containerResult = containerLogs.toString('utf-8').trim();
         console.log(containerResult);

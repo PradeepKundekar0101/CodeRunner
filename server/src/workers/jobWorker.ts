@@ -49,7 +49,17 @@ const worker = new Worker("jobQueue",async (job)=>{
         data.startedAt = new Date();
         const container = await docker.createContainer(containerConfig);
         await container.start();
-        await container.wait();
+         // Use Promise.race to enforce the time limit
+        const executionPromise = container.wait();
+        const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => {
+            reject(new ApiError(500, "Time Limit Exceeded, Maximum 5 Seconds"));
+        }, 5000);
+        });
+
+        // Wait for either the execution to complete or the timeout to occur
+        await Promise.race([executionPromise, timeoutPromise]);
+
         const containerLogs = await container.logs({ stdout: true, stderr: true });
         const containerResult = containerLogs.toString('utf-8').trim();
         console.log(containerResult);
@@ -69,4 +79,4 @@ const worker = new Worker("jobQueue",async (job)=>{
         host:"0.0.0.0",
         port:6379
     }
-})
+} ) 
