@@ -3,7 +3,7 @@ import { Job } from '../types/code';
 // import { User } from '../types/user' 
 
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
-const UserService={
+const CodeService={
     executeCode : async({ code, language, token }:{code:string,language:string,token:string})=>{
         try {
             const {data} = await axios.post<{status:string,data:{job:Job}}>(`${BASE_URL}/api/v1/code/execute`,{code,language},{headers:{"Authorization":token}});
@@ -21,4 +21,4 @@ const UserService={
         }
     }
 }
-export {UserService}
+export {CodeService}

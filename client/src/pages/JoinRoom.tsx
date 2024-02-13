@@ -14,10 +14,10 @@ const JoinRoom = () => {
         <h1 className='text-5xl text-center'>Welcome to Collabaration Mode</h1>
         {
             create?
-            Form({handleToggle,buttonText:"Create",button2Text:"Join a room",setPassword,setRoomId,password,roomId,imageUrl:"https://i.pinimg.com/originals/84/e8/47/84e84792bd2f7489443c4bdbc20e182c.png"})
+            Form({handleToggle,buttonText:"Create",button2Text:"Join a room",setPassword,setRoomId,password,roomId,imageUrl:"image2.png"})
         :
             
-        Form({handleToggle,buttonText:"Join",button2Text:"Create a room",setPassword,setRoomId,password,roomId,imageUrl:"https://d1jj76g3lut4fe.cloudfront.net/processed/with_watermark/2O47c4b4nr69l7Y6tK.png?Expires=1707021346&Signature=cN8QO1pOhWTGEjCFA8cJig7lPUpq~REK4HvUgIvGa7pFsX6ge13BPKLXJ3PgJmApcIHqTxE01Ra7KwLluLGGxN0ryDwrOgnwy4lGnFylEBJ3TmSw-tUURr~hSrKk6MDg76CnWjVCFWnqDgqJ8ZZ7CPVkaZ3qqALV950P52wPtOLFAF-a4CIEUHNOrprWpvs5-8LFamPwHsqfkekBCV2LkHQAtMOb9Y~PcYr60lgjxbSheH-02zr-0Qop~3OxDSWetf1T0-MhIORn8BaAXwzITBqisPdXRLQsbC8Dz19scF3VN5G2BqZj-DGmGl1E~Ed-a1hhXt7~tAn4Pv22RV9TWA__&Key-Pair-Id=K2YEDJLVZ3XRI"})
+        Form({handleToggle,buttonText:"Join",button2Text:"Create a room",setPassword,setRoomId,password,roomId,imageUrl:"image3.png"})
 
     }
     </div>
