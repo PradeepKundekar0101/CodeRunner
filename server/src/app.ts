@@ -1,7 +1,5 @@
 import cors from 'cors';
-
 import express, { Request, Response } from 'express';
-
 import userRoute from './routes/user.routes'
 import codeRoute from './routes/code.routes'
 import {rateLimit} from 'express-rate-limit'

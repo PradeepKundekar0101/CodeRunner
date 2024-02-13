@@ -26,6 +26,9 @@ const NavBar = () => {
 
           {token && (
             <>
+             <li>
+                <Link to={"/collab"}>Collab</Link>
+              </li>
               <li>
                 <Link to={"/sandbox"}>SandBox</Link>
               </li>{" "}
