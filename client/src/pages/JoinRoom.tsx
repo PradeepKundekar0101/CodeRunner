@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 const JoinRoom = () => {
     const user = useAppSelector((state)=>{return state.auth.user});
     const navigate = useNavigate();
-    const {createRoom} = useRooomService()
+    const {createRoom,joinRoom} = useRooomService()
     const [roomId, setRoomId] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [create, setCreate] = useState<boolean>(true);
@@ -35,8 +35,23 @@ const JoinRoom = () => {
             else notify(error.message,false);
         }
   }
-  const handleJoinRoom = async()=>{
-
+  const handleJoinRoom = async(e:React.FormEvent<HTMLFormElement>)=>{
+    e.preventDefault();
+    try {
+        if(!user){
+            notify("Not Allowed to create. Please Login",false);
+            return;
+        }
+        const res = await joinRoom({name:roomId,password,userId:user._id});
+        notify("Room joined sucessfully",true);
+        setTimeout(()=>{
+            navigate(`/collab/${res.room._id}`);
+        },2000)
+    } catch (error:any) {
+        if(error.response)
+        notify(error.response.message,false);
+        else notify(error.message,false);
+    }
   }
   return (
     <div className="h-[70vh]">

@@ -8,4 +8,5 @@ const room_1 = require("../controller/room");
 const router = express_1.default.Router();
 router.post("/", room_1.createRoom);
 router.get("/:roomId", room_1.getRoomById);
+router.post("/join", room_1.joinRoom);
 exports.default = router;

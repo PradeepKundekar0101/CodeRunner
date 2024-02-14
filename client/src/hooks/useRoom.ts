@@ -11,6 +11,14 @@ const useRoomService = () => {
             throw new Error(error.response?.data.message || 'Something went wrong');
         }
     };
+    const joinRoom = async ({ name, password, userId }: { name: string, password: string, userId: string }) => {
+        try {
+            const { data } = await api.post<{ status: string, data: { room: IRoom } }>(`room/join`, { name, password, userId});
+            return data.data;
+        } catch (error:any) {
+            throw new Error(error.response?.data.message || 'Something went wrong');
+        }
+    };
     const getRoom = async (roomId:string) => {
         try {
             const { data } = await api.get<{ status: string, data: { room: IRoom } }>(`room/${roomId}`);
@@ -19,6 +27,6 @@ const useRoomService = () => {
             throw new Error(error.response?.data.message || 'Something went wrong');
         }
     };
-    return { createRoom,getRoom };
+    return { createRoom,getRoom,joinRoom };
 };
 export default useRoomService;

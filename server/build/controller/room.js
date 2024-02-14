@@ -9,12 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRoomById = exports.createRoom = void 0;
+exports.joinRoom = exports.getRoomById = exports.createRoom = void 0;
 const asyncHandler_1 = require("../utils/asyncHandler");
 const apiError_1 = require("../utils/apiError");
 const room_1 = require("../model/room");
 const apiResponse_1 = require("../utils/apiResponse");
 const sandbox_1 = require("../model/sandbox");
+const user_1 = require("../model/user");
 exports.createRoom = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, password, author } = req.body;
     if (!name || !password || !author)
@@ -42,4 +43,27 @@ exports.getRoomById = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(v
     if (!room)
         throw new apiError_1.ApiError(404, "Room not found");
     return res.status(201).json(new apiResponse_1.ApiResponse(201, "Room found", { room }, true));
+}));
+exports.joinRoom = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name, password, userId } = req.body;
+    console.log(userId);
+    if (!name || !password || !userId)
+        throw new apiError_1.ApiError(400, " Values missing required");
+    const userFound = yield user_1.User.findById(userId);
+    if (!userFound) {
+        throw new apiError_1.ApiError(404, "User not found");
+    }
+    const room = yield room_1.Room.findOne({ name });
+    if (!room || room.password !== password) {
+        throw new apiError_1.ApiError(400, "Invalid credentials");
+    }
+    if (room.participants.includes(userId)) {
+        throw new apiError_1.ApiError(400, "Already joined");
+    }
+    const p = room.participants;
+    p.push(userId);
+    console.log(p);
+    room.participants = p;
+    yield room_1.Room.findByIdAndUpdate(room._id, room);
+    return res.status(201).json(new apiResponse_1.ApiResponse(201, "Room Joined", { room }, true));
 }));

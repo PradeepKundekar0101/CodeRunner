@@ -23,7 +23,7 @@ const RoomSchema = new mongoose.Schema<IRoom>(
       required: [true, "Author id is required"],
     },
     participants: {
-      type: [mongoose.Types.ObjectId],
+      type:[mongoose.Types.ObjectId],
       default:[]
     },
     sandbox: {
