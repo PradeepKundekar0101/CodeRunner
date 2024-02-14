@@ -2,6 +2,7 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import userRoute from './routes/user.routes'
 import codeRoute from './routes/code.routes'
+import roomRoute from './routes/room.routes'
 import {rateLimit} from 'express-rate-limit'
 require("./workers/jobWorker")
 const app = express();
@@ -23,6 +24,7 @@ app.get("/api/v1/health",(req:Request,res:Response)=>{
 })
 app.use('/api/v1/user',userRoute);
 app.use('/api/v1/code',codeRoute);
+app.use('/api/v1/room',roomRoute);
 
 // Unhandled Routes:
 app.all("*", (req, res, next) => {
