@@ -6,6 +6,7 @@ import { useAppSelector } from "../app/hooks";
 import SandBoxNav from "../components/SandBoxNav";
 import { useParams } from "react-router-dom";
 import useAxios from '../hooks/useAxios'
+import {connect} from 'socket.io-client'
 const CollabarativeSandBox: React.FC = () => {
   const [output, setOutput] = useState<string>("");
   const [language, setLanguage] = useState<string>("javascript");
@@ -14,11 +15,17 @@ const CollabarativeSandBox: React.FC = () => {
   const [fontSize, setFontSize] = useState<string>("10");
   const [running, setRunning] = useState<boolean>(false);
   const [runTime, setRunTime] = useState<number>(0);
-    const {roomId} = useParams();
+
+  const {roomId} = useParams();
 
   useEffect(() => {
-   
-}, [])
+    connectToSocket();
+  }, []);
+  
+  const connectToSocket = async ()=>{
+      await connect("http://localhost:5001");
+      console.log("Connected");
+  }
   const axios = useAxios();
 
 
