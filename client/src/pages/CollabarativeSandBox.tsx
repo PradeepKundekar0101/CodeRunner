@@ -4,9 +4,14 @@ import { Toaster } from "react-hot-toast";
 import { notify } from "../utils/notify";
 import { useAppSelector } from "../app/hooks";
 import SandBoxNav from "../components/SandBoxNav";
-import { useParams } from "react-router-dom";
-import useAxios from '../hooks/useAxios'
+import { useNavigate, useParams } from "react-router-dom";
+import useAxios from "../hooks/useAxios";
+import useRoomService from "../hooks/useRoom";
+import io from "socket.io-client";
+
+
 const CollabarativeSandBox: React.FC = () => {
+  
   const [output, setOutput] = useState<string>("");
   const [language, setLanguage] = useState<string>("javascript");
   const [code, setCode] = useState<string>("");
@@ -14,17 +19,45 @@ const CollabarativeSandBox: React.FC = () => {
   const [fontSize, setFontSize] = useState<string>("10");
   const [running, setRunning] = useState<boolean>(false);
   const [runTime, setRunTime] = useState<number>(0);
-    const {roomId} = useParams();
+  const [isAllowed,setIsAllowed] = useState<boolean>(false);
+  
+  const user = useAppSelector((state)=>{return state.auth.user});
+  const userId = user && user._id || '';
 
+  const { roomId } = useParams();
+  const {getRoom}  = useRoomService();
+  const navigate = useNavigate();
+  
+  const socket = io("http://localhost:5001");
+  
   useEffect(() => {
-   
-}, [])
+    checkUserAllowed()
+    joinSocketRoom();
+  }, []);
+  useEffect(()=>{
+    socket.on("someone_joined",(data)=>{
+      notify(data+" joined",true);
+    })
+  },[socket])
+  const joinSocketRoom = ()=>{
+    socket.emit("join_room",roomId);
+    socket.emit("joined_room",{roomId,user:user?.user_name});
+  }
+
+  const checkUserAllowed = async ()=>{
+    if(!user){
+      notify("Login required to join",false);
+      setTimeout(()=>{
+        navigate("/login");
+      },2000);
+      return;
+    }
+    const res = await getRoom(roomId||'');
+    setIsAllowed(res.room.participants.includes(user._id))
+  }
+  
   const axios = useAxios();
 
-
-  const userId = useAppSelector((state) => {
-    return state.auth.user?._id;
-  });
 
   const editorOptions = {
     selectOnLineNumbers: true,
@@ -33,17 +66,15 @@ const CollabarativeSandBox: React.FC = () => {
   const runCode = async () => {
     try {
       setRunning(true);
-      const response = await axios.post(
-        "code/execute",
-        { code, language, userId }
-      );
+      const response = await axios.post("code/execute", {
+        code,
+        language,
+        userId,
+      });
       const jobId = response.data.jobId;
 
       const intervalId = setInterval(async () => {
-        const { data } = await axios.get(
-          "code/status",
-          { params: { jobId } }
-        );
+        const { data } = await axios.get("code/status", { params: { jobId } });
         if (data.success) {
           const { output, startedAt, completedAt, status } = data.data.job;
           if (status == "pending") {
@@ -53,7 +84,8 @@ const CollabarativeSandBox: React.FC = () => {
           setOutput(output);
           const startedAt1: Date = new Date(startedAt);
           const completedAt1: Date = new Date(completedAt);
-          const durationInMilliseconds: number = completedAt1.getTime() - startedAt1.getTime();
+          const durationInMilliseconds: number =
+            completedAt1.getTime() - startedAt1.getTime();
           setRunTime(durationInMilliseconds);
           setRunning(false);
         } else {
@@ -72,6 +104,9 @@ const CollabarativeSandBox: React.FC = () => {
       console.error("Error running code:", error);
     }
   };
+  if(!isAllowed){
+    return <h1>Not Allowed</h1>
+  }
   return (
     <>
       <Toaster />
@@ -90,7 +125,7 @@ const CollabarativeSandBox: React.FC = () => {
 
       <div className="flex">
         <MonacoEditor
-        value={code}
+          value={code}
           height="100vh"
           width="70vw"
           options={editorOptions}

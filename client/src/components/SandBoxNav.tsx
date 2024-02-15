@@ -1,6 +1,6 @@
 import { FaPlay, FaRegSave } from "react-icons/fa";
-import { CiLight } from "react-icons/ci";
-import { MdOutlineDarkMode } from "react-icons/md";
+
+import { MdOutlineDarkMode,MdLightMode } from "react-icons/md";
 import { notify } from "../utils/notify";
 import { useParams } from "react-router-dom";
 import useAxios from '../hooks/useAxios';
@@ -75,11 +75,11 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
 
       <button
         disabled={running}
-        className="bg-green-600 flex items-center py-1 px-3 rounded-lg text-white"
+        className="bg-green-600 flex items-center py-1 px-3 rounded-lg text-white hover:bg-green-700"
         onClick={runCode}
       >
-        {running ? "Running..." : "Run Code"}
-        <FaPlay />
+        {running ? "Running..." : "Run"}
+        &nbsp; <FaPlay />
       </button>
     
       <button onClick={handleSave}>
@@ -93,7 +93,7 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
         }}
       >
         {theme === "vs-dark" ? (
-          <CiLight fill="#fff" size={30} />
+          <MdLightMode fill="#fff" size={30} />
         ) : (
           <MdOutlineDarkMode fill="#fff" size={30} />
         )}

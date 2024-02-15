@@ -8,6 +8,7 @@ const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
 const user_routes_1 = __importDefault(require("./routes/user.routes"));
 const code_routes_1 = __importDefault(require("./routes/code.routes"));
+const room_routes_1 = __importDefault(require("./routes/room.routes"));
 const express_rate_limit_1 = require("express-rate-limit");
 require("./workers/jobWorker");
 const app = (0, express_1.default)();
@@ -28,6 +29,7 @@ app.get("/api/v1/health", (req, res) => {
 });
 app.use('/api/v1/user', user_routes_1.default);
 app.use('/api/v1/code', code_routes_1.default);
+app.use('/api/v1/room', room_routes_1.default);
 // Unhandled Routes:
 app.all("*", (req, res, next) => {
     res.status(404).json({
