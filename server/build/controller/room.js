@@ -46,7 +46,6 @@ exports.getRoomById = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(v
 }));
 exports.joinRoom = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, password, userId } = req.body;
-    console.log(userId);
     if (!name || !password || !userId)
         throw new apiError_1.ApiError(400, " Values missing required");
     const userFound = yield user_1.User.findById(userId);
@@ -56,9 +55,6 @@ exports.joinRoom = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void
     const room = yield room_1.Room.findOne({ name });
     if (!room || room.password !== password) {
         throw new apiError_1.ApiError(400, "Invalid credentials");
-    }
-    if (room.participants.includes(userId)) {
-        throw new apiError_1.ApiError(400, "Already joined");
     }
     const p = room.participants;
     p.push(userId);

@@ -59,6 +59,7 @@ const JoinRoom = () => {
       <h1 className="text-5xl text-center">Welcome to Collabaration Mode</h1>
       {create
         ? Form({
+            title:"Create a Room",
             handleToggle,
             buttonText: "Create",
             button2Text: "Join a room",
@@ -70,6 +71,7 @@ const JoinRoom = () => {
             handleSubmit:handleCreateRoom
           })
         : Form({
+            title:"Join a Room",
             handleToggle,
             buttonText: "Join",
             button2Text: "Create a room",
@@ -84,6 +86,7 @@ const JoinRoom = () => {
   );
 };
 const Form = ({
+    title,
   handleToggle,
   buttonText,
   button2Text,
@@ -94,6 +97,7 @@ const Form = ({
   password,
   handleSubmit,
 }: {
+    title:string,
   handleToggle: () => void;
   buttonText: string;
   button2Text: string;
@@ -107,7 +111,7 @@ const Form = ({
   return (
     <div className="flex justify-center items-center">
       <form onSubmit={handleSubmit} className="flex flex-col ">
-        <h1 className="text-3xl">Create a Room</h1>
+        <h1 className="text-3xl">{title}</h1>
         <input
           className="px-2 py-1 rounded-md text-lg my-2 border border-slate-300 outline-none"
           onChange={(e) => {

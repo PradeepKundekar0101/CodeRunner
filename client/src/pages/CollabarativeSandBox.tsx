@@ -7,8 +7,11 @@ import SandBoxNav from "../components/SandBoxNav";
 import { useNavigate, useParams } from "react-router-dom";
 import useAxios from "../hooks/useAxios";
 import useRoomService from "../hooks/useRoom";
-import { connect } from "socket.io-client";
+import io from "socket.io-client";
+
+
 const CollabarativeSandBox: React.FC = () => {
+  
   const [output, setOutput] = useState<string>("");
   const [language, setLanguage] = useState<string>("javascript");
   const [code, setCode] = useState<string>("");
@@ -17,14 +20,30 @@ const CollabarativeSandBox: React.FC = () => {
   const [running, setRunning] = useState<boolean>(false);
   const [runTime, setRunTime] = useState<number>(0);
   const [isAllowed,setIsAllowed] = useState<boolean>(false);
+  
   const user = useAppSelector((state)=>{return state.auth.user});
+  const userId = user && user._id || '';
+
   const { roomId } = useParams();
   const {getRoom}  = useRoomService();
   const navigate = useNavigate();
+  
+  const socket = io("http://localhost:5001");
+  
   useEffect(() => {
     checkUserAllowed()
-    connectToSocket();
+    joinSocketRoom();
   }, []);
+  useEffect(()=>{
+    socket.on("someone_joined",(data)=>{
+      notify(data+" joined",true);
+    })
+  },[socket])
+  const joinSocketRoom = ()=>{
+    socket.emit("join_room",roomId);
+    socket.emit("joined_room",{roomId,user:user?.user_name});
+  }
+
   const checkUserAllowed = async ()=>{
     if(!user){
       notify("Login required to join",false);
@@ -36,15 +55,9 @@ const CollabarativeSandBox: React.FC = () => {
     const res = await getRoom(roomId||'');
     setIsAllowed(res.room.participants.includes(user._id))
   }
-  const connectToSocket = async () => {
-    await connect("http://localhost:5001");
-    console.log("Connected");
-  };
+  
   const axios = useAxios();
 
-  const userId = useAppSelector((state) => {
-    return state.auth.user?._id;
-  });
 
   const editorOptions = {
     selectOnLineNumbers: true,

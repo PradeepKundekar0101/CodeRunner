@@ -22,6 +22,12 @@ app.get('/', (req, res) => {
 
 io.on("connection",(socket)=>{
   console.log("New connection ", socket.id);
+  socket.on("join_room",(data)=>{
+    socket.join(data)
+  })
+  socket.on("joined_room",(data)=>{
+    socket.to(data.roomId).emit("someone_joined",data.user)
+  })
 })
 
 server.listen(PORT, () => {

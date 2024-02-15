@@ -1,13 +1,10 @@
 import { Request, Response } from "express"
 import { asyncHandler } from "../utils/asyncHandler"
-
 import { ApiError } from "../utils/apiError";
 import { Room } from "../model/room";
 import { ApiResponse } from "../utils/apiResponse";
-import { createFile } from "./code";
 import { SandBox } from "../model/sandbox";
 import { User } from "../model/user";
-import mongoose from "mongoose";
 
 export const createRoom =  asyncHandler(async(req:Request,res:Response)=>{
     const {name,password,author} = req.body;
@@ -45,7 +42,6 @@ export const getRoomById =  asyncHandler(async(req:Request,res:Response)=>{
 
 export const joinRoom =  asyncHandler(async(req:Request,res:Response)=>{
     const {name,password,userId} = req.body;
-    console.log(userId)
     if(!name || !password || !userId )
        throw new ApiError(400," Values missing required");
     const userFound = await User.findById(userId);
@@ -58,9 +54,7 @@ export const joinRoom =  asyncHandler(async(req:Request,res:Response)=>{
     if(!room || room.password!==password){
         throw new ApiError(400,"Invalid credentials");
     }
-    if( room.participants.includes(userId) ){
-        throw new ApiError(400,"Already joined");
-    }
+
     
     const p = room.participants;
     p.push(userId);
