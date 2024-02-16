@@ -17,20 +17,27 @@ const apiResponse_1 = require("../utils/apiResponse");
 const sandbox_1 = require("../model/sandbox");
 const user_1 = require("../model/user");
 exports.createRoom = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name, password, author } = req.body;
-    if (!name || !password || !author)
+    const { name, password } = req.body;
+    const author = req.user;
+    console.log("author=");
+    console.log(author);
+    const authorId = author._id;
+    const authorName = author.user_name;
+    if (!name || !password || !authorId || !authorName)
         throw new apiError_1.ApiError(400, "All fields are required");
     const existedRoom = yield room_1.Room.findOne({ name });
     if (existedRoom) {
         throw new apiError_1.ApiError(409, "Room with this room name already exists");
     }
-    const file = yield sandbox_1.SandBox.create({ userId: author, title: name });
+    const file = yield sandbox_1.SandBox.create({ userId: authorId, title: name });
     if (!file) {
         throw new apiError_1.ApiError(500, "Something went wrong while creating a file");
     }
     const p = [];
-    p.push(author);
-    const newRoom = yield room_1.Room.create({ name, password, author, sandbox: file, participants: p });
+    p.push({ id: authorId, name: authorName });
+    console.log(p);
+    const newRoom = yield room_1.Room.create({ name, password, author: authorId, sandbox: file, participants: p });
+    console.log(newRoom);
     if (!newRoom)
         throw new apiError_1.ApiError(500, "Something went wrong while creating a room");
     return res.status(201).json(new apiResponse_1.ApiResponse(201, "Room created", { room: newRoom }, true));
@@ -45,8 +52,11 @@ exports.getRoomById = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(v
     return res.status(201).json(new apiResponse_1.ApiResponse(201, "Room found", { room }, true));
 }));
 exports.joinRoom = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name, password, userId } = req.body;
-    if (!name || !password || !userId)
+    const { name, password } = req.body;
+    const user = req.user;
+    const userId = user._id;
+    const userName = user.user_name;
+    if (!name || !password || !userId || !userName)
         throw new apiError_1.ApiError(400, " Values missing required");
     const userFound = yield user_1.User.findById(userId);
     if (!userFound) {
@@ -57,8 +67,7 @@ exports.joinRoom = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void
         throw new apiError_1.ApiError(400, "Invalid credentials");
     }
     const p = room.participants;
-    p.push(userId);
-    console.log(p);
+    p.push({ id: userId, name: userName });
     room.participants = p;
     yield room_1.Room.findByIdAndUpdate(room._id, room);
     return res.status(201).json(new apiResponse_1.ApiResponse(201, "Room Joined", { room }, true));

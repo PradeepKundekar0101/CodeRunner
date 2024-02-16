@@ -21,13 +21,18 @@ const RoomSchema = new mongoose_1.default.Schema({
         required: [true, "Author id is required"],
     },
     participants: {
-        type: [mongoose_1.default.Types.ObjectId],
-        default: []
+        type: [
+            {
+                name: { type: String, required: true },
+                id: { type: mongoose_1.default.Types.ObjectId, required: true },
+            },
+        ],
+        default: [],
     },
     sandbox: {
         type: mongoose_1.default.Types.ObjectId,
         default: "",
-        ref: "SandBox"
+        ref: "SandBox",
     },
 }, { timestamps: true });
 exports.Room = mongoose_1.default.model("Room", RoomSchema);

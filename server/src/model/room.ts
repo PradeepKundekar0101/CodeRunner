@@ -1,11 +1,13 @@
-import mongoose, { ObjectId } from "mongoose";
-export interface IRoom {
+import mongoose, { Document, ObjectId } from "mongoose";
+
+export interface IRoom extends Document {
   name: string;
   password: string;
   author: ObjectId;
-  participants: ObjectId[];
+  participants: { name: string; id: ObjectId }[];
   sandbox: ObjectId;
 }
+
 const RoomSchema = new mongoose.Schema<IRoom>(
   {
     name: {
@@ -23,15 +25,21 @@ const RoomSchema = new mongoose.Schema<IRoom>(
       required: [true, "Author id is required"],
     },
     participants: {
-      type:[mongoose.Types.ObjectId],
-      default:[]
+      type: [
+        {
+          name: { type: String, required: true },
+          id: { type: mongoose.Types.ObjectId, required: true },
+        },
+      ],
+      default: [],
     },
     sandbox: {
       type: mongoose.Types.ObjectId,
       default: "",
-      ref:"SandBox"
+      ref: "SandBox",
     },
   },
   { timestamps: true }
 );
-export const Room = mongoose.model("Room", RoomSchema);
+
+export const Room = mongoose.model<IRoom>("Room", RoomSchema);
