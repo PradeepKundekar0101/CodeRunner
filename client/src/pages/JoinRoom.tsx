@@ -24,7 +24,7 @@ const JoinRoom = () => {
                 notify("Not Allowed to create. Please Login",false);
                 return;
             }
-            const res = await createRoom({name:roomId,password,author:user._id});
+            const res = await createRoom({name:roomId,password,authorId:user._id,authorName:user.user_name});
             notify("Room created!",true);
             setTimeout(()=>{
                 navigate(`/collab/${res.room._id}`);
@@ -42,7 +42,7 @@ const JoinRoom = () => {
             notify("Not Allowed to create. Please Login",false);
             return;
         }
-        const res = await joinRoom({name:roomId,password,userId:user._id});
+        const res = await joinRoom({name:roomId,password,userId:user._id,userName:user.user_name});
         notify("Room joined sucessfully",true);
         setTimeout(()=>{
             navigate(`/collab/${res.room._id}`);

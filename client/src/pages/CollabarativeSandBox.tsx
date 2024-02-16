@@ -53,7 +53,10 @@ const CollabarativeSandBox: React.FC = () => {
       return;
     }
     const res = await getRoom(roomId||'');
-    setIsAllowed(res.room.participants.includes(user._id))
+    if(res.room.participants.find(e=> e.id==user._id))
+    setIsAllowed(true);
+    else 
+      setIsAllowed(false);
   }
   
   const axios = useAxios();

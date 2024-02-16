@@ -3,6 +3,6 @@ export interface IRoom {
     name: string;
     password: string;
     author: string;
-    participants: string[];
+    participants:{name:string,id:string}[]
     sandbox: string;
   }
