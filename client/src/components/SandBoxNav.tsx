@@ -3,7 +3,10 @@ import { FaPlay, FaRegSave } from "react-icons/fa";
 import { MdOutlineDarkMode,MdLightMode } from "react-icons/md";
 import { notify } from "../utils/notify";
 import { useParams } from "react-router-dom";
+import useRoomService from "../hooks/useRoom";
 import useAxios from '../hooks/useAxios';
+import { useEffect } from "react";
+import { IRoom } from "../types/room";
 interface SandBoxNavProps {
   language: string;
   setLanguage: React.Dispatch<React.SetStateAction<string>>;
@@ -15,6 +18,7 @@ interface SandBoxNavProps {
   code: string;
   setCode: React.Dispatch<React.SetStateAction<string>>;
   runCode: () => Promise<void>;
+  room?:IRoom
 }
 const SandBoxNav: React.FC<SandBoxNavProps> = ({
   language,
@@ -25,8 +29,15 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
   setFontSize,
   running,
   runCode,
-  code
+  code,
+  room
 }) => {
+  const displayCount = 2; // Number of participants to display
+
+  const getCircleStyle = (index:any) => {
+    const colors = ['bg-green-500', 'bg-blue-500', 'bg-yellow-500', 'bg-red-500', 'bg-purple-500'];
+    return `w-10 h-10 text-white shadow-xl ml-[-10px] rounded-full ${colors[index % colors.length]}`;
+  };
   const axios = useAxios();
   const {fileId} = useParams();
   const handleSave = async(e:any)=>{
@@ -38,6 +49,7 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
      notify(error.message,false);
     }
   }
+ 
   return (
     <div className="flex justify-end py-3 space-x-3 px-5 border-t-2 border-b-2 border-slate-700 bg-slate-800 ">
       <div className="flex items-center bg-slate-700 text-white py-1 px-2 rounded-md">
@@ -98,6 +110,29 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
           <MdOutlineDarkMode fill="#fff" size={30} />
         )}
       </button>
+    {
+      room &&
+      <div className="contributors flex ">
+      {room.participants.slice(0, displayCount).map((participant, index) => (
+        <span key={index} className={`w-10   flex items-center justify-center  ${getCircleStyle(index)} `}>
+          {participant.name.charAt(0)}
+        </span>
+      ))}
+      {room.participants.length > displayCount && (
+        <span className={`w-10 h-10 rounded-full bg-gray-400 relative overflow-hidden`}>
+          +{room.participants.length - displayCount}
+          <span className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden">
+            {room.participants.slice(displayCount).map((participant, index) => (
+              <span key={index} className={`absolute ${getCircleStyle(index)} left-${index * 10}`}>
+                {participant.name.charAt(0)}
+              </span>
+            ))}
+          </span>
+        </span>
+      )}
+    </div>
+    }
+      
     </div>
   );
 };

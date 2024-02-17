@@ -27,6 +27,9 @@ io.on("connection",(socket)=>{
   })
   socket.on("joined_room",(data)=>{
     socket.to(data.roomId).emit("someone_joined",data.user)
+  });
+  socket.on("code_change",(data)=>{
+    socket.to(data.room._id).emit("code_changed",data);
   })
 })
 
