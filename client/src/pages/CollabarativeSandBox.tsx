@@ -8,6 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import useAxios from "../hooks/useAxios";
 import useRoomService from "../hooks/useRoom";
 import io from "socket.io-client";
+import { IRoom } from "../types/room";
 
 
 const CollabarativeSandBox: React.FC = () => {
@@ -20,48 +21,72 @@ const CollabarativeSandBox: React.FC = () => {
   const [running, setRunning] = useState<boolean>(false);
   const [runTime, setRunTime] = useState<number>(0);
   const [isAllowed,setIsAllowed] = useState<boolean>(false);
-  
+  const [room,setRoom] = useState<IRoom>();  
   const user = useAppSelector((state)=>{return state.auth.user});
   const userId = user && user._id || '';
 
   const { roomId } = useParams();
   const {getRoom}  = useRoomService();
-  const navigate = useNavigate();
+  const navigate = useNavigate();   
+  const axios = useAxios();
   
   const socket = io("http://localhost:5001");
   
   useEffect(() => {
-    checkUserAllowed()
-    joinSocketRoom();
+    checkUserAllowed();
   }, []);
-  useEffect(()=>{
-    socket.on("someone_joined",(data)=>{
-      notify(data+" joined",true);
-    })
-  },[socket])
-  const joinSocketRoom = ()=>{
-    socket.emit("join_room",roomId);
-    socket.emit("joined_room",{roomId,user:user?.user_name});
-  }
-
-  const checkUserAllowed = async ()=>{
-    if(!user){
-      notify("Login required to join",false);
-      setTimeout(()=>{
-        navigate("/login");
-      },2000);
-      return;
-    }
-    const res = await getRoom(roomId||'');
-    if(res.room.participants.find(e=> e.id==user._id))
-    setIsAllowed(true);
-    else 
-      setIsAllowed(false);
-  }
   
-  const axios = useAxios();
+  useEffect(() => {
 
+    socket.on("someone_joined", (data) => {
+      if (data !== user?.user_name) {
+        notify(data + " joined", true);
+        updateRoom();
+      }
+    });
 
+    socket.on("code_changed",(data:any)=>{
+      console.log(data)
+      if(data.user._id!=userId)
+      setCode(data.e)
+    })
+    // return () => {
+    //   socket.off("code_changed");
+    //   socket.off("someone_joined");
+    // };
+  }, [socket]);
+  const updateRoom = async()=>{
+    const res = await getRoom(roomId||'');
+    setRoom(res.room);
+  }
+  const joinSocketRoom = () => {
+    socket.emit("join_room", roomId);
+    socket.emit("joined_room", { roomId, user: user?.user_name });
+  };
+  
+  const checkUserAllowed = async () => {
+    if (!user) {
+      notify("Login required to join", false);
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+      return false;
+    }
+    try {
+      const res = await getRoom(roomId || "");
+      setRoom(res.room);
+      if (res.room.participants.find((e) => e.id === user._id)) {
+        setIsAllowed(true);
+        joinSocketRoom();
+      } else {
+        setIsAllowed(false);
+      }
+    } catch (error) {
+      console.error("Error checking user allowed:", error);
+      return false;
+    }
+  };
+  
   const editorOptions = {
     selectOnLineNumbers: true,
     fontSize: Number(fontSize),
@@ -107,9 +132,13 @@ const CollabarativeSandBox: React.FC = () => {
       console.error("Error running code:", error);
     }
   };
+
   if(!isAllowed){
     return <h1>Not Allowed</h1>
   }
+
+
+
   return (
     <>
       <Toaster />
@@ -124,6 +153,7 @@ const CollabarativeSandBox: React.FC = () => {
         setCode={setCode}
         language={language}
         setLanguage={setLanguage}
+        room={room}
       />
 
       <div className="flex">
@@ -134,8 +164,9 @@ const CollabarativeSandBox: React.FC = () => {
           options={editorOptions}
           language={language}
           theme={theme}
-          onChange={(val) => {
-            setCode(val || "");
+          onChange={(e)=>{
+            setCode(e||'');
+            socket.emit("code_change",{e,user,room})
           }}
         />
 
