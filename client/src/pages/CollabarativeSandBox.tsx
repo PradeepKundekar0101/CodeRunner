@@ -4,15 +4,14 @@ import { Toaster } from "react-hot-toast";
 import { notify } from "../utils/notify";
 import { useAppSelector } from "../app/hooks";
 import SandBoxNav from "../components/SandBoxNav";
+import RoomDetailsModal from "../components/RoomDetailsModal";
 import { useNavigate, useParams } from "react-router-dom";
 import useAxios from "../hooks/useAxios";
 import useRoomService from "../hooks/useRoom";
 import io from "socket.io-client";
 import { IRoom } from "../types/room";
 
-
 const CollabarativeSandBox: React.FC = () => {
-  
   const [output, setOutput] = useState<string>("");
   const [language, setLanguage] = useState<string>("javascript");
   const [code, setCode] = useState<string>("");
@@ -22,6 +21,9 @@ const CollabarativeSandBox: React.FC = () => {
   const [runTime, setRunTime] = useState<number>(0);
   const [isAllowed,setIsAllowed] = useState<boolean>(false);
   const [room,setRoom] = useState<IRoom>();  
+  const [showModal,setShowModal] = useState<boolean>(false);
+  const [authorName,setAuthorName] = useState<string>("");
+
   const user = useAppSelector((state)=>{return state.auth.user});
   const userId = user && user._id || '';
 
@@ -37,7 +39,6 @@ const CollabarativeSandBox: React.FC = () => {
   }, []);
   
   useEffect(() => {
-
     socket.on("someone_joined", (data) => {
       if (data !== user?.user_name) {
         notify(data + " joined", true);
@@ -46,17 +47,17 @@ const CollabarativeSandBox: React.FC = () => {
     });
 
     socket.on("code_changed",(data:any)=>{
-      console.log(data)
       if(data.user._id!=userId)
       setCode(data.e)
     })
-    // return () => {
-    //   socket.off("code_changed");
-    //   socket.off("someone_joined");
-    // };
   }, [socket]);
+
   const updateRoom = async()=>{
     const res = await getRoom(roomId||'');
+    console.log(res.room.participants);
+    const authorName = res.room.participants.find((e)=>{return e.id==res.room.author});
+    console.log(authorName)
+    setAuthorName(authorName?.name||"");
     setRoom(res.room);
   }
   const joinSocketRoom = () => {
@@ -137,10 +138,20 @@ const CollabarativeSandBox: React.FC = () => {
     return <h1>Not Allowed</h1>
   }
 
-
-
   return (
     <>
+    {
+      showModal ? <RoomDetailsModal roomName={room?.name||""} roomPassword={room?.password||""} creator={authorName} participants={[
+        {
+          name:"pradeep",
+          online:true
+        },
+        {
+          name:"user1",
+          online:false
+        }
+      ]} setShowModal={setShowModal} /> :<></>
+    }
       <Toaster />
       <SandBoxNav
         runCode={runCode}
@@ -154,6 +165,7 @@ const CollabarativeSandBox: React.FC = () => {
         language={language}
         setLanguage={setLanguage}
         room={room}
+        setShowModal={setShowModal}
       />
 
       <div className="flex">

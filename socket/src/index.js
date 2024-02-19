@@ -15,7 +15,6 @@ const io = new Server(server,{
     methods:["GET","POST"]
   }
 })
-
 app.get('/', (req, res) => {
   res.send('<h1>Hello world</h1>');
 });
