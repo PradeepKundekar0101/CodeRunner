@@ -18,7 +18,8 @@ interface SandBoxNavProps {
   code: string;
   setCode: React.Dispatch<React.SetStateAction<string>>;
   runCode: () => Promise<void>;
-  room?:IRoom
+  room?:IRoom;
+  setShowModal:React.Dispatch<React.SetStateAction<boolean>>
 }
 const SandBoxNav: React.FC<SandBoxNavProps> = ({
   language,
@@ -30,7 +31,8 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
   running,
   runCode,
   code,
-  room
+  room,
+  setShowModal
 }) => {
   const displayCount = 2; // Number of participants to display
 
@@ -132,7 +134,9 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
       )}
     </div>
     }
-      
+      <button onClick={()=>{setShowModal(true)}}>
+        info
+      </button>
     </div>
   );
 };
