@@ -8,7 +8,6 @@ import {
 import Home from './pages/Home'
 import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
-import NotFound from './pages/NotFound'
 import Layout from './components/Layout'
 import { useAppSelector } from './app/hooks'
 import Hello from './pages/Hello'

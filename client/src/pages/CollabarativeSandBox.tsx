@@ -94,7 +94,6 @@ const CollaborativeSandBox: React.FC = () => {
         ({
           clients,
           username,
-          socketId,
         }: {
           clients: Participant[];
           username: string;
@@ -128,7 +127,6 @@ const CollaborativeSandBox: React.FC = () => {
         socketRef.current.off(Actions.JOINED);
         socketRef.current.off(Actions.DISCONNECTED);
       }
-      
     };
   }, []);
 

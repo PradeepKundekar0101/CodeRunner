@@ -3,12 +3,12 @@ import { FaPlay, FaRegSave } from "react-icons/fa";
 import { MdOutlineDarkMode,MdLightMode } from "react-icons/md";
 import { notify } from "../utils/notify";
 import { useParams } from "react-router-dom";
-import useRoomService from "../hooks/useRoom";
+// import useRoomService from "../hooks/useRoom";
 
 import { BsThreeDotsVertical } from "react-icons/bs";
 
 import useAxios from '../hooks/useAxios';
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import { IRoom } from "../types/room";
 interface Participant {
   username: string;
@@ -127,21 +127,14 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
 
       {participants && participants.slice(0, displayCount).map((participant, index) => (
         <span key={index} className={`w-10   flex items-center justify-center  ${getCircleStyle(index)} `}>
-          {participant.username.charAt(0)}
+          {participant.username.charAt(0).toUpperCase()}
         </span>
       ))}
-      {/* {room.participants.length > displayCount && (
-        <span className={`w-10 h-10 rounded-full bg-gray-400 relative overflow-hidden`}>
+      {room.participants.length > displayCount && (
+        <span className={`w-10 h-10 text-slate-200 flex items-center justify-center shadow-xl ml-[-10px] rounded-full  bg-gray-400 relative overflow-hidden`}>
           +{room.participants.length - displayCount}
-          <span className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden">
-            {room.participants.slice(displayCount).map((participant, index) => (
-              <span key={index} className={`absolute ${getCircleStyle(index)} left-${index * 10}`}>
-                {participant.name.charAt(0)}
-              </span>
-            ))}
-          </span>
         </span>
-      )} */}
+      )}
     </div>
     }
       <button className="text-3xl text-white" onClick={()=>{setShowModal(true)}}>
