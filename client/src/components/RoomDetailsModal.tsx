@@ -1,35 +1,74 @@
-import React, { useState } from 'react'
-interface Props{
-    roomName:string,
-    roomPassword:string,
-    creator:string,
-    participants:{
-        name:string,
-        online:boolean
-    }[],
-    setShowModal:any
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { IoMdClose } from "react-icons/io";
+import { ImExit } from "react-icons/im";
+import { MdContentCopy } from "react-icons/md";
+
+interface Props {
+  roomName: string;
+  roomPassword: string;
+  setShowModal: any;
+  participants: { username: string; socketId: string }[];
 }
-const RoomDetailsModal:React.FC<Props> = ({roomName,roomPassword,creator,participants,setShowModal}) => {
-    
+
+const RoomDetailsModal: React.FC<Props> = ({
+  roomName,
+  roomPassword,
+  setShowModal,
+  participants,
+}) => {
+  const navigate = useNavigate();
   return (
-    <div className='overlay h-screen w-screen absolute z-50 bg-[#0008]'>
-        <div className="modal mx-auto rounded-xl flex items-center justify-center h-96 w-[20vw] flex-col bg-white">
-
-            <h1>Room Name:{roomName}</h1>
-            <h1>Room Password: {roomPassword}</h1>
-            <h1>Creater {creator}</h1>
-            {
-                participants.map((e)=>{return <div className='flex items-center justify-center'>
-                        <h1>{e.name}</h1>
-                        <span className={`min-h-4 flex px-3 py-1 rounded-full  min-w-4 ${e.online?"bg-green-400":"bg-red-400"}`}>
-                            {e.online?"Online":"Offline"}
-                        </span>
-                    </div>})
-            }
-            <button onClick={()=>{setShowModal(false)}}>Close</button>
+    <div className="overlay h-screen w-screen absolute z-50 bg-[#0008]">
+      <div className="modal p-10 mx-auto rounded-md flex items-center justify-center h-96 w-[20vw] flex-col bg-white relative">
+        <div>
+          <h1 className="text-xl">Room Name:</h1>
+          <div className="flex justify-between bg-slate-100 rounded-md px-3 py-1">
+            <h1 className="text-2xl ">{roomName}</h1>
+            <button>
+              <MdContentCopy />
+            </button>
+          </div>
         </div>
-    </div>
-  )
-}
 
-export default RoomDetailsModal
+        <div className="mt-3">
+          <h1 className="text-xl">Room Password:</h1>
+          <div className="flex justify-between bg-slate-100 rounded-md px-3 py-1">
+            <h1 className="text-2xl ">{roomPassword}</h1>
+            <button>
+              <MdContentCopy />
+            </button>
+          </div>
+        </div>     
+        <div>
+            <h1>Participants</h1>
+          <ul>
+            {participants &&
+              participants.map((p) => {
+                return <li>{p.username}</li>;
+              })}
+          </ul>
+        </div>
+
+        <button
+          onClick={() => {
+            setShowModal(false);
+          }}
+          className="absolute top-5 right-5"
+        >
+          <IoMdClose />
+        </button>
+        <button
+          className="bg-red-500 py-1 px-3 flex items-center text-white space-x-2 rounded-md absolute bottom-5"
+          onClick={() => {
+            navigate("/collab");
+          }}
+        >
+          Leave Room &nbsp; <ImExit />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default RoomDetailsModal;

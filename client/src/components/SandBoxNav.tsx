@@ -4,9 +4,16 @@ import { MdOutlineDarkMode,MdLightMode } from "react-icons/md";
 import { notify } from "../utils/notify";
 import { useParams } from "react-router-dom";
 import useRoomService from "../hooks/useRoom";
+
+import { BsThreeDotsVertical } from "react-icons/bs";
+
 import useAxios from '../hooks/useAxios';
 import { useEffect } from "react";
 import { IRoom } from "../types/room";
+interface Participant {
+  username: string;
+  socketId: string;
+}
 interface SandBoxNavProps {
   language: string;
   setLanguage: React.Dispatch<React.SetStateAction<string>>;
@@ -19,7 +26,8 @@ interface SandBoxNavProps {
   setCode: React.Dispatch<React.SetStateAction<string>>;
   runCode: () => Promise<void>;
   room?:IRoom;
-  setShowModal:React.Dispatch<React.SetStateAction<boolean>>
+  setShowModal:React.Dispatch<React.SetStateAction<boolean>>;
+  participants?:Participant[]
 }
 const SandBoxNav: React.FC<SandBoxNavProps> = ({
   language,
@@ -32,7 +40,8 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
   runCode,
   code,
   room,
-  setShowModal
+  setShowModal,
+  participants
 }) => {
   const displayCount = 2; // Number of participants to display
 
@@ -115,12 +124,13 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
     {
       room &&
       <div className="contributors flex ">
-      {room.participants.slice(0, displayCount).map((participant, index) => (
+
+      {participants && participants.slice(0, displayCount).map((participant, index) => (
         <span key={index} className={`w-10   flex items-center justify-center  ${getCircleStyle(index)} `}>
-          {participant.name.charAt(0)}
+          {participant.username.charAt(0)}
         </span>
       ))}
-      {room.participants.length > displayCount && (
+      {/* {room.participants.length > displayCount && (
         <span className={`w-10 h-10 rounded-full bg-gray-400 relative overflow-hidden`}>
           +{room.participants.length - displayCount}
           <span className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden">
@@ -131,11 +141,13 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
             ))}
           </span>
         </span>
-      )}
+      )} */}
     </div>
     }
-      <button onClick={()=>{setShowModal(true)}}>
-        info
+      <button className="text-3xl text-white" onClick={()=>{setShowModal(true)}}>
+      <BsThreeDotsVertical />
+
+
       </button>
     </div>
   );
