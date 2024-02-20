@@ -2,36 +2,86 @@ import express from 'express';
 import dotenv from 'dotenv'
 import cors from 'cors';
 import http from 'http';
-import {Server} from 'socket.io'
+import { Server } from 'socket.io'
+// import Actions from '../Actions';
+const Actions = {
+  JOIN:"join",
+  JOINED:"joined",
+  DISCONNECTED:"disconnected",
+  CODE_CHANGED:"code-change",
+  SYNC_CODE:"sync-code",
+  LEAVE:"leave"
+}
+
 dotenv.config();
 const app = express();
 app.use(cors());
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3001
 
-const io = new Server(server,{
-  cors:{
-    origin:"*",
-    methods:["GET","POST"]
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
   }
-})
+});
+
 app.get('/', (req, res) => {
   res.send('<h1>Hello world</h1>');
 });
 
-io.on("connection",(socket)=>{
+const userSocketMap={}
+const currentCodeForRooms = {};
+function getAllClients(roomId){
+  return Array.from(io.sockets.adapter.rooms.get(roomId)||[]).map((socketId)=>{
+    return {
+      socketId,
+      username:userSocketMap[socketId]
+    }
+  })
+}
+function getCurrentCodeForRoom(roomId) {
+  return currentCodeForRooms[roomId] || "";
+}
+
+io.on("connection", (socket) => {
   console.log("New connection ", socket.id);
-  socket.on("join_room",(data)=>{
-    socket.join(data)
-  })
-  socket.on("joined_room",(data)=>{
-    socket.to(data.roomId).emit("someone_joined",data.user)
-  });
-  socket.on("code_change",(data)=>{
-    socket.to(data.room._id).emit("code_changed",data);
-  })
-})
+
+    socket.on(Actions.JOIN,({roomId,username})=>{
+        userSocketMap[socket.id] = username;
+        socket.join(roomId);
+        const clients = getAllClients(roomId);
+        socket.emit(Actions.SYNC_CODE, { code: getCurrentCodeForRoom(roomId) });
+        clients.forEach(({socketId})=>{
+            io.to(socketId).emit(Actions.JOINED,{
+              clients,
+              username,
+              socketId:socket.id
+            })
+        })
+        
+    });
+
+    socket.on(Actions.CODE_CHANGED,({code,roomId})=>{
+        currentCodeForRooms[roomId] = code;
+       socket.in(roomId).emit(Actions.CODE_CHANGED,{code});
+    })
+  
+
+    socket.on("disconnecting",()=>{
+      const rooms = [...socket.rooms];
+      rooms.forEach((roomId)=>{
+        socket.in(roomId).emit(Actions.DISCONNECTED,{
+          socketId:socket.id,
+          username: userSocketMap[socket.id]
+        });
+      });
+      delete userSocketMap[socket.id];
+      socket.leave();
+    });
+
+});
 
 server.listen(PORT, () => {
-  console.log('listening on *:'+PORT);
+  console.log('listening on *:' + PORT);
 });
