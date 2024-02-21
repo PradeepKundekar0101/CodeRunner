@@ -26,8 +26,9 @@ interface SandBoxNavProps {
   setCode: React.Dispatch<React.SetStateAction<string>>;
   runCode: () => Promise<void>;
   room?:IRoom;
-  setShowModal:React.Dispatch<React.SetStateAction<boolean>>;
-  participants?:Participant[]
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>
+  participants?:Participant[];
+  
 }
 const SandBoxNav: React.FC<SandBoxNavProps> = ({
   language,
@@ -41,7 +42,9 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
   code,
   room,
   setShowModal,
-  participants
+  participants,
+  
+
 }) => {
   const displayCount = 2; // Number of participants to display
 
@@ -95,7 +98,12 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
           <option value="32">Large</option>
         </select>
       </div>
-
+      {
+        !room &&
+          <button onClick={handleSave}>
+          <FaRegSave fill="#fff"   size={30} />
+        </button>
+      }
       <button
         disabled={running}
         className="bg-green-600 flex items-center py-1 px-3 rounded-lg text-white hover:bg-green-700"
@@ -105,9 +113,7 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
         &nbsp; <FaPlay />
       </button>
     
-      <button onClick={handleSave}>
-        <FaRegSave fill="#fff"   size={30} />
-      </button>
+    
 
       <button
         onClick={() => {
@@ -130,7 +136,7 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
           {participant.username.charAt(0).toUpperCase()}
         </span>
       ))}
-      {room.participants.length > displayCount && (
+      {participants && participants.length > displayCount && (
         <span className={`w-10 h-10 text-slate-200 flex items-center justify-center shadow-xl ml-[-10px] rounded-full  bg-gray-400 relative overflow-hidden`}>
           +{room.participants.length - displayCount}
         </span>

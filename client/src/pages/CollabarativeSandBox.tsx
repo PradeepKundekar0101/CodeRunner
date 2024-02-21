@@ -32,6 +32,7 @@ const CollaborativeSandBox: React.FC = () => {
   const [room, setRoom] = useState<IRoom | undefined>(undefined);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [participants, setParticipants] = useState<Participant[]>([]);
+  const [author,setAuthor] = useState<boolean>(false);
 
   const user = useAppSelector((state) => state.auth.user);
   const userId = user?._id || "";
@@ -56,6 +57,9 @@ const CollaborativeSandBox: React.FC = () => {
       try {
         const res = await getRoom(roomId || "");
         setRoom(res.room);
+        console.log(res.room.author +" "+userId);
+        if(res.room.author==userId)
+          setAuthor(true);
         if (res.room.participants.find((e) => e.id === user._id)) {
           setIsAllowed(true);
         } else {
@@ -117,7 +121,6 @@ const CollaborativeSandBox: React.FC = () => {
           });
         }
       );
-
     };
 
     init();

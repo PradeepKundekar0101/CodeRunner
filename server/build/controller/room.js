@@ -19,25 +19,19 @@ const user_1 = require("../model/user");
 exports.createRoom = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, password } = req.body;
     const author = req.user;
-    console.log("author=");
-    console.log(author);
     const authorId = author._id;
     const authorName = author.user_name;
     if (!name || !password || !authorId || !authorName)
         throw new apiError_1.ApiError(400, "All fields are required");
     const existedRoom = yield room_1.Room.findOne({ name });
-    if (existedRoom) {
+    if (existedRoom)
         throw new apiError_1.ApiError(409, "Room with this room name already exists");
-    }
     const file = yield sandbox_1.SandBox.create({ userId: authorId, title: name });
-    if (!file) {
+    if (!file)
         throw new apiError_1.ApiError(500, "Something went wrong while creating a file");
-    }
     const p = [];
     p.push({ id: authorId, name: authorName });
-    console.log(p);
     const newRoom = yield room_1.Room.create({ name, password, author: authorId, sandbox: file, participants: p });
-    console.log(newRoom);
     if (!newRoom)
         throw new apiError_1.ApiError(500, "Something went wrong while creating a room");
     return res.status(201).json(new apiResponse_1.ApiResponse(201, "Room created", { room: newRoom }, true));
