@@ -4,6 +4,7 @@ import { useAppSelector } from "../app/hooks";
 import { MdNavigateNext } from "react-icons/md";
 import {format} from 'timeago.js'
 import { FaTrash } from "react-icons/fa";
+import ErrorBoundary from "./Error";
 type FileBoxProps = Omit<Partial<File>, 'setShowDelModal'> & {
   setShowDelModal: React.Dispatch<React.SetStateAction<boolean>>,
   setFileSelected: React.Dispatch<React.SetStateAction<string>>
@@ -16,7 +17,7 @@ const FileBox = ({ _id, title, language,createdAt,setShowDelModal,setFileSelecte
     return `${language.toLowerCase()}.png`;
   };
   if (!user) {
-    return <h1>Not Allowed</h1>;
+    return <ErrorBoundary/>;
   }
   const handleClick =()=>{
    setShowDelModal(true);

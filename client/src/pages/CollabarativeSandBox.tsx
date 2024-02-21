@@ -12,6 +12,7 @@ import useRoomService from "../hooks/useRoom";
 import { IRoom } from "../types/room";
 import { initSocket } from "../sockets/initSocket";
 import { Actions } from "../sockets/Actions";
+import ErrorBoundary from "../components/Error";
 
 interface Participant {
   username: string;
@@ -19,6 +20,7 @@ interface Participant {
 }
 
 const CollaborativeSandBox: React.FC = () => {
+
   const [output, setOutput] = useState<string>("");
   const [language, setLanguage] = useState<string>("javascript");
   const [code, setCode] = useState<string>("");
@@ -30,6 +32,7 @@ const CollaborativeSandBox: React.FC = () => {
   const [room, setRoom] = useState<IRoom | undefined>(undefined);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [participants, setParticipants] = useState<Participant[]>([]);
+  const [author,setAuthor] = useState<boolean>(false);
 
   const user = useAppSelector((state) => state.auth.user);
   const userId = user?._id || "";
@@ -43,7 +46,37 @@ const CollaborativeSandBox: React.FC = () => {
 
   useEffect(() => {
     const init = async () => {
+        if (!user)
+        {
+            notify("Login required to join", false);
+            setTimeout(() => {
+              navigate("/login");
+            }, 2000);
+            return;
+        }
+      try {
+        const res = await getRoom(roomId || "");
+        setRoom(res.room);
+        console.log(res.room.author +" "+userId);
+        if(res.room.author==userId)
+          setAuthor(true);
+        if (res.room.participants.find((e) => e.id === user._id)) {
+          setIsAllowed(true);
+        } else {
+          setIsAllowed(false);
+          return;
+        }
+      }
+        catch(error:any){
+          notify(error.message, false);
+            setTimeout(() => {
+              navigate("/login");
+            }, 2000);
+            return;
+        }
       socketRef.current = await initSocket();
+      if(!socketRef.current)
+        return;
       socketRef.current.on("connect_error", (err: string) => {
         handleError(err);
       });
@@ -65,7 +98,6 @@ const CollaborativeSandBox: React.FC = () => {
         ({
           clients,
           username,
-          socketId,
         }: {
           clients: Participant[];
           username: string;
@@ -75,7 +107,6 @@ const CollaborativeSandBox: React.FC = () => {
             notify(username + " Joined", true);
           }
           setParticipants(clients);
-      
         }
       );
       socketRef.current.on(Actions.SYNC_CODE, ({ code }: { code: string }) => {
@@ -90,68 +121,81 @@ const CollaborativeSandBox: React.FC = () => {
           });
         }
       );
-
     };
 
     init();
-    checkUserAllowed();
-
     return () => {
-      socketRef.current.disconnect();
-      socketRef.current.off(Actions.JOINED);
-      socketRef.current.off(Actions.DISCONNECTED);
+      if(socketRef.current){
+        socketRef.current.disconnect();
+        socketRef.current.off(Actions.JOINED);
+        socketRef.current.off(Actions.DISCONNECTED);
+      }
     };
   }, []);
 
   useEffect(() => {
-    if(socketRef.current){
+    if(socketRef && socketRef.current){
       socketRef.current.on(Actions.CODE_CHANGED,({code}:{code:string})=>{
-        // console.log("CODE CHNAGED");
-        // console.log(code);
         setCode(code);
       })
     }
     return () => {
+      if(socketRef && socketRef.current)
       socketRef.current.off(Actions.CODE_CHANGED);
     }
   }, [socketRef.current])
+
   
-
-  const checkUserAllowed = async () => {
-    if (!user) {
-      notify("Login required to join", false);
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
-      return;
-    }
-
-    try {
-      const res = await getRoom(roomId || "");
-      setRoom(res.room);
-      const isUserAllowed = res.room.participants.some((p) => p.id === userId);
-      setIsAllowed(isUserAllowed);
-
-      if (isUserAllowed) {
-        // joinSocketRoom();
-      }
-    } catch (error) {
-      console.error("Error checking user allowed:", error);
-    }
-  };
-
   const editorOptions = {
     selectOnLineNumbers: true,
     fontSize: Number(fontSize),
   };
-
   const runCode = async () => {
-   //TODO
+    try {
+      setRunning(true);
+      const response = await axios.post("code/execute", {
+        code,
+        language,
+        userId,
+      });
+      const jobId = response.data.jobId;
+
+      const intervalId = setInterval(async () => {
+        const { data } = await axios.get("code/status", { params: { jobId } });
+        if (data.success) {
+          const { output, startedAt, completedAt, status } = data.data.job;
+          if (status == "pending") {
+            return;
+          }
+          clearInterval(intervalId);
+          setOutput(output);
+          const startedAt1: Date = new Date(startedAt);
+          const completedAt1: Date = new Date(completedAt);
+          const durationInMilliseconds: number =
+            completedAt1.getTime() - startedAt1.getTime();
+          setRunTime(durationInMilliseconds);
+          setRunning(false);
+        } else {
+          clearInterval(intervalId);
+          setOutput(data.data.job.output);
+          setRunning(false);
+        }
+      }, 1000);
+    } catch (error: any) {
+      setRunning(false);
+      if (error.response) {
+        notify(error.response.data, false);
+        return;
+      }
+      notify(error.message, false);
+      console.error("Error running code:", error);
+    }
   };
 
-  if (!isAllowed) {
-    return <h1>Not Allowed</h1>;
+  if(!isAllowed){
+    return <ErrorBoundary/>
   }
+
   const handleCodeChange = (e: any) => {
     setCode(e);
     socketRef.current.emit(Actions.CODE_CHANGED, { roomId, code: e });

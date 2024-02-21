@@ -9,26 +9,19 @@ import { User } from "../model/user";
 export const createRoom =  asyncHandler(async(req:Request,res:Response)=>{
     const {name,password} = req.body;
     const author = req.user;
-    console.log("author=")
-    console.log(author)
     const authorId = author._id;
     const authorName = author.user_name;
     if(!name || !password || !authorId || !authorName )
        throw new ApiError(400,"All fields are required");
-    
     const existedRoom = await Room.findOne({name})
-    if (existedRoom) {
+    if (existedRoom)
         throw new ApiError(409, "Room with this room name already exists")
-    }
     const file = await SandBox.create({userId:authorId,title:name});
-    if(!file){
+    if(!file)
         throw new ApiError(500,"Something went wrong while creating a file");
-    }
     const p = [];
     p.push({id:authorId,name:authorName});
-    console.log(p)
     const newRoom = await Room.create({name,password,author:authorId,sandbox:file,participants:p});
-    console.log(newRoom)
     if(!newRoom)
         throw new ApiError(500,"Something went wrong while creating a room");
     return res.status(201).json(new ApiResponse(201,"Room created",{room:newRoom},true));
