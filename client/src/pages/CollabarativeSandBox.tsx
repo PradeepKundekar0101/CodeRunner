@@ -13,6 +13,7 @@ import { IRoom } from "../types/room";
 import { initSocket } from "../sockets/initSocket";
 import { Actions } from "../sockets/Actions";
 import ErrorBoundary from "../components/Error";
+import { User } from "../types/user";
 
 interface Participant {
   username: string;
@@ -33,6 +34,7 @@ const CollaborativeSandBox: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [author,setAuthor] = useState<boolean>(false);
+  const [positions,setPositions] = useState<any[]>([]);
 
   const user = useAppSelector((state) => state.auth.user);
   const userId = user?._id || "";
@@ -43,8 +45,14 @@ const CollaborativeSandBox: React.FC = () => {
   const axios = useAxios();
 
   const socketRef = useRef<any>(null);
+  const editorRef = useRef<any>(null);
 
   useEffect(() => {
+    // const handleEditorDidMount = (editor: any, monaco: any) => {
+    //   editorRef.current = editor;
+    //   // Do additional setup if needed
+    // };
+   
     const init = async () => {
         if (!user)
         {
@@ -135,7 +143,10 @@ const CollaborativeSandBox: React.FC = () => {
 
   useEffect(() => {
     if(socketRef && socketRef.current){
-      socketRef.current.on(Actions.CODE_CHANGED,({code}:{code:string})=>{
+      socketRef.current.on(Actions.CODE_CHANGED,({code,user,position}:{code:string,user:User,position:any})=>{
+        const temp = [...positions];
+        temp.push({lineNumber:position.lineNumber,column:position.column,user:user.user_name});
+        setPositions(temp);
         setCode(code);
       })
     }
@@ -196,9 +207,9 @@ const CollaborativeSandBox: React.FC = () => {
     return <ErrorBoundary/>
   }
 
-  const handleCodeChange = (e: any) => {
+  const handleCodeChange = (e: any,position:any) => {
     setCode(e);
-    socketRef.current.emit(Actions.CODE_CHANGED, { roomId, code: e });
+    socketRef.current.emit(Actions.CODE_CHANGED, { roomId, code: e,user,position});
   };
   return (
     <>
@@ -229,11 +240,13 @@ const CollaborativeSandBox: React.FC = () => {
         setShowModal={setShowModal}
       />
 
-      <div className="flex">
-        <MonacoEditor
+      <div className="flex relative">
+      <MonacoEditor
           onChange={(e) => {
-            handleCodeChange(e);
+            // console.log(editorRef.current.getPosition())
+            handleCodeChange(e,editorRef.current.getPosition());
           }}
+          onMount={(a)=>{editorRef.current=a}}
           value={code}
           height="100vh"
           width="70vw"
@@ -241,6 +254,18 @@ const CollaborativeSandBox: React.FC = () => {
           language={language}
           theme={theme}
         />
+      {positions.map((position, index) => (
+  
+  <div key={index} style={{ position: 'absolute', top: position.lineNumber*-2, left: position.column*10 }}>
+    
+    <div style={{ width: '', height: '', backgroundColor: "paleturquoise", borderRadius: '20px', padding:"1px 5px" }}>
+      {position.user}
+    </div>
+    
+  </div>
+  
+))}
+       
 
         <div className="bg-black text-green-400 w-[40%]">
           <h2>Output:</h2>

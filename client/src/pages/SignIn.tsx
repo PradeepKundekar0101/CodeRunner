@@ -40,10 +40,16 @@ const SignIn = () => {
 
 
   return (
-    <div className="bg-black h-[80vh] flex items-center justify-center ">
+    <div className="h-[50rem] w-full dark:bg-black bg-white  dark:bg-grid-small-white/[0.2] bg-grid-small-black/[0.2] relative flex items-center justify-center">
+
+    <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+
       <Toaster/>
       <form className="max-w-sm mx-auto w-full" onSubmit={handleSubmit}>
-        <h1 className="text-7xl my-10 text-white font-extrabold">Login</h1>
+      <p className="text-4xl sm:text-7xl font-bold relative z-20 bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 py-8">
+   Login 
+     
+    </p>
         <div className="mb-5">
           <label
             htmlFor="email"
@@ -57,7 +63,7 @@ const SignIn = () => {
             type="email"
             id="email"
             className="input"
-            placeholder="name@codezone.com"
+            placeholder="name@example.com"
             required
           />
           <span className={`text-red-400 my-2  ${emailError?'visible' :'hidden'} `}>{emailError}</span>
@@ -69,13 +75,13 @@ const SignIn = () => {
           >
             Your password
           </label>
+          
           <input value={password} onChange={handlePasswordChange} type="password" id="password" className="input" required />
         </div>
-
-        <button type="submit" className="btn-primary">
-          { loading?"Logging in..." : "Login"}
-        </button>
-
+        <button className="inline-flex items-center justify-center py-2 px-6 font-medium tracking-wide text-black transition duration-200 bg-white rounded-lg hover:bg-gray-800 hover:text-white focus:shadow-outline focus:outline-none">
+        { loading?"Logging in..." : "Login"}
+      </button>
+      
         <Link className="text-blue-200 my-2 block" to="/signup">
           Create an account
         </Link>

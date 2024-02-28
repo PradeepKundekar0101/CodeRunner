@@ -62,9 +62,9 @@ io.on("connection", (socket) => {
         
     });
 
-    socket.on(Actions.CODE_CHANGED,({code,roomId})=>{
+    socket.on(Actions.CODE_CHANGED,({code,roomId,user,position})=>{
         currentCodeForRooms[roomId] = code;
-       socket.in(roomId).emit(Actions.CODE_CHANGED,{code});
+       socket.in(roomId).emit(Actions.CODE_CHANGED,{code,user,position});
     })
   
 
