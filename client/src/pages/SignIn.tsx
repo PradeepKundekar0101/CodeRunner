@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import "../index.css";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { UserService } from "../service/user";
 import { useAppDispatch } from "../app/hooks";
 import {login} from '../app/slices/authSlice'
 import { notify } from "../utils/notify";
 import { Toaster } from "react-hot-toast";
+import { validEmail } from "../utils/validEmail";
+import { loginUser } from "../service/user";
 const SignIn = () => {
     const dispatch = useAppDispatch();
     const [email,setEmail] = useState<string>("");
@@ -13,8 +14,7 @@ const SignIn = () => {
     const [emailError,setEmailError] = useState<string | null>(null);
     const [loading,setLoading] = useState<boolean>(false);
     function handleEmailChange(e: ChangeEvent<HTMLInputElement>): void {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if(!emailRegex.test(e.target.value))
+        if(!validEmail(e.target.value))
             setEmailError("Invalid Email Id");
         else setEmailError(null);
             setEmail(e.target.value);
@@ -25,9 +25,8 @@ const SignIn = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       try {
-          
           setLoading(true);
-          const response = await UserService.loginUser({ email, password });
+          const response = await loginUser({ email, password });
           dispatch(login(response));
           setLoading(false);
           notify("User logined!",true);

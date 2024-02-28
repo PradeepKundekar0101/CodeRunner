@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import "../index.css";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { UserService } from "../service/user";
+
 import { useAppDispatch } from "../app/hooks";
 import { login } from "../app/slices/authSlice";
 import { Toaster } from "react-hot-toast";
 import { notify } from "../utils/notify";
 import Heading from "../components/Heading";
+import { registerUser } from "../service/user";
 
 const SignUp = () => {
   const dispatch = useAppDispatch();
@@ -55,7 +56,7 @@ const SignUp = () => {
         return;
       }
       setLoading(true);
-      const response = await UserService.registerUser({
+      const response = await registerUser({
         email,
         password,
         user_name,
