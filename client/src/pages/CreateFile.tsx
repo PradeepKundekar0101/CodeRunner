@@ -1,50 +1,88 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import { useAppSelector } from '../app/hooks';
 import { notify } from '../utils/notify';
 import { Link, useNavigate } from 'react-router-dom';
 import useAxios from '../hooks/useAxios';
 import { Toaster } from 'react-hot-toast';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { SparklesCore } from '../components/ui/sparkles';
+
 const CreateFile = () => {
-    const [title,setTitle] = useState<string>("");
-    const token = useAppSelector((state)=>{return state.auth.token});
-    const user = useAppSelector((state)=>{return state.auth.user});
-    const navigate = useNavigate();
-    const axios = useAxios();
-    const handleCreateFile = async(e:any)=>{
-      e.preventDefault();
-        try {
-          if(!token){
-            notify("Not allowed",false);
-            return;
-          }
-          if(title.length<=3){
-            notify("Title is too short",false);
-            return;
-          }
-            const response = await axios.post("code/create",{title});
-            navigate(`/sandbox/${user?._id}/${response.data.data.sandBox._id}`);
-        } catch (error:any) {
-         notify(error.message,false);
-        }
+  const [title, setTitle] = useState<string>("");
+  const token = useAppSelector((state) => state.auth.token);
+  const user = useAppSelector((state) => state.auth.user);
+  const navigate = useNavigate();
+  const axios = useAxios();
+
+
+  const handleCreateFile = async (e: any) => {
+    e.preventDefault();
+    try {
+      if (!token) {
+        notify("Not allowed", false);
+        return;
+      }
+      if (title.length <= 3) {
+        notify("Title is too short", false);
+        return;
+      }
+      const response = await axios.post("code/create", { title });
+      navigate(`/sandbox/${user?._id}/${response.data.data.sandBox._id}`);
+    } catch (error: any) {
+      notify(error.message, false);
     }
+  };
+
   return (
-    <div className='h-[80vh] bg-black flex justify-center items-center '>
-      <Toaster/>
-        <div>
-            <form className='flex flex-col border-slate-500 border-2 px-10 py-10 rounded-xl space-y-2' onSubmit={handleCreateFile}>
-                <input
-                  className='px-5 py-3  w-96 rounded-md'
-                  type="text" placeholder='Enter the Title' value={title} onChange={(e)=>{setTitle(e.target.value)}}/>
-
-                <input 
-                  type="submit" value="Let's Go" className='inline-flex items-center w-full px-5 py-3 mb-3 mr-1 text-base font-semibold text-white no-underline align-middle bg-blue-600 border border-transparent border-solid rounded-md cursor-pointer select-none sm:mb-0 sm:w-auto hover:bg-blue-700 hover:border-blue-700 hover:text-white focus-within:bg-blue-700 focus-within:border-blue-700'/>
+    <div className='h-[40rem] relative w-full bg-black flex flex-col items-center justify-center overflow-hidden '>
+      <Toaster />
+      <div className="w-full absolute inset-0 h-screen">
+        
+      <SparklesCore
+          id="tsparticlesfullpage"
+          background="transparent"
+          minSize={0.6}
+          maxSize={1.4}
+          particleDensity={100}
+          className="w-full h-full"
+          particleColor="#FFFFFF"
+        />
+              </div>
+      <div className='flex w-3/5 justify-center shadow-2xl'>
+        {/* Left Column */}
+        <form
+          className='flex flex-col px-8 py-10 relative space-y-2 bg-slate-900 justify-center'
+          onSubmit={handleCreateFile}
+        >
+          <input
+            className='px-5 py-2 border border-grey outline-none text-white focus:online-none w-full bg-black rounded-md'
+            type="text"
+            placeholder='Enter the Title'
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
+          />
+          <input
+            type="submit"
+            value="Let's Go"
+            className='inline-flex items-center w-full px-5 py-2 mb-3 mr-1 text-base font-semibold text-white no-underline align-middle bg-blue-600 border border-transparent border-solid rounded-md cursor-pointer select-none sm:mb-0 sm:w-auto hover:bg-blue-700 hover:border-blue-700 hover:text-white focus-within:bg-blue-700 focus-within:border-blue-700'
+          />
+            <Link className='text-white absolute bottom-5  text-lg justify-center items-center' to={"/"}>
+             <span>Back</span>
            
-            </form>
-            <Link className='text-white' to={"/"}>Back</Link>
-            
-        </div>
-    </div>
-  )
-}
+      </Link>
+        </form>
 
-export default CreateFile
+        {/* Right Column */}
+        <div className='w-2/5'>
+         <img src={"https://i.ibb.co/gP1hmp7/Firefly-create-file-coding-theme-49294-1.jpg"} alt="Your Image" className=" object-cover" />
+        </div>
+      </div>
+
+    
+    </div>
+  );
+};
+
+export default CreateFile;

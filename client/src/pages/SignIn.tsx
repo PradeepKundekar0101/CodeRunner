@@ -27,7 +27,7 @@ const SignIn = () => {
     mutationKey:["sigin"],
     mutationFn:loginUser,
     onSuccess:(data)=>{
-      dispatch(data);
+      dispatch(login(data));
       notify("Login Successfull",true);
     },
     onError:(data:any)=>{
