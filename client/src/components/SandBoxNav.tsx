@@ -65,8 +65,9 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
   }
  
   return (
-    <div className="flex justify-end py-3 space-x-3 px-5 border-t-2 border-b-2 border-slate-700 bg-slate-800 ">
+    <div className="flex justify-end py-3 space-x-3 px-5 border-t-2 border-b-2 border-slate-700 bg-slate-900 ">
       <div className="flex items-center bg-slate-700 text-white py-1 px-2 rounded-md">
+      <label htmlFor="size">Language&nbsp;</label>
         <select
           name="lang"
           className="bg-slate-600 px-3 py-1 rounded-md focus:outline-none "

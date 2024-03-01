@@ -6,14 +6,27 @@ import useAxios from '../hooks/useAxios';
 import { Toaster } from 'react-hot-toast';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { SparklesCore } from '../components/ui/sparkles';
+import { useMutation } from '@tanstack/react-query';
+import useCodeService from '../hooks/useCode';
+import React from 'react';
 
 const CreateFile = () => {
   const [title, setTitle] = useState<string>("");
+  const {createFile} = useCodeService();
   const token = useAppSelector((state) => state.auth.token);
   const user = useAppSelector((state) => state.auth.user);
   const navigate = useNavigate();
-  const axios = useAxios();
 
+  const {mutate} = useMutation({
+    mutationKey:["createfile"],
+    mutationFn: createFile,
+    onSuccess:(data)=>{
+      navigate(`/sandbox/${user?._id}/${data.sandBox._id}`);
+    },
+    onError:(data)=>{
+      notify(data.message, false);
+    }
+  });
 
   const handleCreateFile = async (e: any) => {
     e.preventDefault();
@@ -22,12 +35,11 @@ const CreateFile = () => {
         notify("Not allowed", false);
         return;
       }
-      if (title.length <= 3) {
+      if (title.length < 3) {
         notify("Title is too short", false);
         return;
       }
-      const response = await axios.post("code/create", { title });
-      navigate(`/sandbox/${user?._id}/${response.data.data.sandBox._id}`);
+      mutate({title});
     } catch (error: any) {
       notify(error.message, false);
     }
@@ -38,15 +50,7 @@ const CreateFile = () => {
       <Toaster />
       <div className="w-full absolute inset-0 h-screen">
         
-      <SparklesCore
-          id="tsparticlesfullpage"
-          background="transparent"
-          minSize={0.6}
-          maxSize={1.4}
-          particleDensity={100}
-          className="w-full h-full"
-          particleColor="#FFFFFF"
-        />
+     
               </div>
       <div className='flex w-3/5 justify-center shadow-2xl'>
         {/* Left Column */}

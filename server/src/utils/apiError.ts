@@ -13,7 +13,6 @@ class ApiError extends Error {
         this.message = message
         this.success = false;
 
-
         if (stack) {
             this.stack = stack
         } else{

@@ -9,29 +9,34 @@ import CreateButton from "../components/CreateButton";
 import useCodeService from "../hooks/useCode";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../components/ui/Loader";
+
+import { Navigate } from "react-router-dom";
 const AllSandBoxs = () => {
-  const [files, setFiles] = useState<File[]>([]);
+  // const [files, setFiles] = useState<File[]>([]);
   const [showDelModal, setShowDelModal] = useState<boolean>(false);
   const [fileSelected, setFileSelected] = useState<string>("");
 
   const {getAllFiles} = useCodeService();
-  const {data,isLoading,error,isError} = useQuery({
+  const {data:files,isLoading,error} = useQuery({
     queryKey:["files"],
     queryFn:getAllFiles,
   });
+
   if(isLoading)
   return <Loader/>
-
+  if(error){
+    return <Navigate to={"*"}/>
+  }
 
   return (
     <div>
       <Toaster />
-      {showDelModal && files && (
+      {showDelModal  && (
         <DelModal
           files={files}
-          setFiles={setFiles}
           fileSelected={fileSelected}
           setShowDelModal={setShowDelModal}
+          
         />
       )}
       {files && files.length > 0 && (

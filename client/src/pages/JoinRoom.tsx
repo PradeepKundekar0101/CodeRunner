@@ -54,9 +54,9 @@ const JoinRoom = () => {
     }
   }
   return (
-    <div className="h-[70vh]">
+    <div className="h-[70vh] bg-black">
         <Toaster/>
-      <h1 className="text-5xl text-center">Welcome to Collabaration Mode</h1>
+      <h1 className="text-5xl text-center text-white font-bold py-4">Welcome to Collabaration Mode</h1>
       {create
         ? Form({
             title:"Create a Room",
@@ -113,7 +113,7 @@ const Form = ({
       <form onSubmit={handleSubmit} className="flex flex-col ">
         <h1 className="text-3xl">{title}</h1>
         <input
-          className="px-2 py-1 rounded-md text-lg my-2 border border-slate-300 outline-none"
+          className="px-2 py-1 rounded-md text-lg my-2 bg-transparent border border-slate-300 text-white outline-none"
           onChange={(e) => {
             setRoomId(e.target.value);
           }}
@@ -122,7 +122,7 @@ const Form = ({
           value={roomId}
         />
         <input
-          className="px-2 py-1 rounded-md text-lg my-2 border border-slate-300 outline-none"
+          className="px-2 py-1 rounded-md  bg-transparent  text-lg my-2 border text-white border-slate-300 outline-none"
           onChange={(e) => {
             setPassword(e.target.value);
           }}
@@ -131,13 +131,13 @@ const Form = ({
           value={password}
         />
         <input
-          className="bg-green-500 text-white py-1 px-2 my-2 cursor-pointer hover:bg-green-600"
+          className="bg-green-600 rounded-md text-white py-1 px-2 my-2 cursor-pointer hover:bg-green-700"
           type="submit"
           value={buttonText}
         />
         <button
           type="button"
-          className="bg-black text-white py-1 px-2 my-2"
+          className="bg-blue-600 rounded-md text-white py-1 px-2 my-2"
           onClick={handleToggle}
         >
           {button2Text}

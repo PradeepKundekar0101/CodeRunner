@@ -5,12 +5,11 @@ import { File } from "../types/code";
 const DelModal = ({
   setShowDelModal,
   fileSelected,
-  setFiles,
   files
 }: {
   setShowDelModal: React.Dispatch<React.SetStateAction<boolean>>,
   fileSelected:string,
-  setFiles:React.Dispatch<React.SetStateAction<File[]>>,
+
   files: File[]
 }) => {
   const axios = useAxios();
@@ -18,11 +17,12 @@ const DelModal = ({
     try {
         await axios.delete("code/"+fileSelected);
         notify("Deleted!",true);
+        setTimeout(()=>{
+          window.location.reload();
+        },800)
         setShowDelModal(false);
-        console.log(files);
         const updateFiles = files.filter((file)=>{return file._id!=fileSelected});
-        console.log(updateFiles)
-        setFiles(updateFiles);
+        files = updateFiles
     } catch (error:any) {
         notify(error.response.data.message,false);
         setShowDelModal(false);
@@ -37,7 +37,7 @@ const DelModal = ({
       className=" backdrop-blur-md  overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0  z-[10000000]  justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
     >
       <div className="relative p-4 w-full max-w-2xl max-h-full">
-        <div className="relative bg-white left-[60%] bottom-[-50%] rounded-lg shadow dark:bg-gray-700">
+        <div className="relative bg-white left-[60%] bottom-[-50%] rounded-lg shadow dark:bg-slate-800">
           <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
               Delete Confirmation
@@ -86,6 +86,7 @@ const DelModal = ({
             <button
               data-modal-hide="default-modal"
               type="button"
+              onClick={()=>{setShowDelModal(false)}}
               className="ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
             >
               Decline

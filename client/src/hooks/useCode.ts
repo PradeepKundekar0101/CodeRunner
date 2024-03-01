@@ -27,15 +27,15 @@ const useCodeService = () => {
             throw new Error(error.response.data.message || 'Something went wrong, please try again later');
         }
     }
-    const createFile = async({fileName,userId}:{fileName:string,userId:string})=>{
+    const createFile = async({title}:{title:string})=>{
         try {
-            const {data} = await api.post(`code/create`,{fileName},{params:{}});
+            const {data} = await api.post(`code/create`,{title});
             return data.data;
         } catch (error:any) {
             throw new Error(error.response.data.message || 'Something went wrong, please try again later');
         }
     }
    
-    return { executeCode,getStatus,getAllFiles};
+    return { executeCode,getStatus,getAllFiles,createFile};
 };
 export default useCodeService;
