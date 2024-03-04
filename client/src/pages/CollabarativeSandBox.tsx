@@ -249,7 +249,7 @@ const CollaborativeSandBox: React.FC = () => {
           language={language}
           theme={theme}
         />
-      {positions.map((position, index) => (
+      {/* {positions.map((position, index) => (
   
   <div key={index} style={{ position: 'absolute', top: position.lineNumber*-2, left: position.column*10 }}>
     
@@ -257,9 +257,9 @@ const CollaborativeSandBox: React.FC = () => {
       {position.user}
     </div>
     
-  </div>
-  
-))}
+  </div> */}
+{/*   
+))} */}
        
 
         <div className="bg-black text-green-400 w-[40%]">
