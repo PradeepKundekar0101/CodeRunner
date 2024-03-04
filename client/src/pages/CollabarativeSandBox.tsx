@@ -48,11 +48,7 @@ const CollaborativeSandBox: React.FC = () => {
   const editorRef = useRef<any>(null);
 
   useEffect(() => {
-    // const handleEditorDidMount = (editor: any, monaco: any) => {
-    //   editorRef.current = editor;
-    //   // Do additional setup if needed
-    // };
-   
+
     const init = async () => {
         if (!user)
         {
@@ -65,10 +61,9 @@ const CollaborativeSandBox: React.FC = () => {
       try {
         const res = await getRoom(roomId || "");
         setRoom(res.room);
-        console.log(res.room.author +" "+userId);
         if(res.room.author==userId)
           setAuthor(true);
-        if (res.room.participants.find((e) => e.id === user._id)) {
+        if (res.room.participants.find((e:any) => e.id === user._id)) {
           setIsAllowed(true);
         } else {
           setIsAllowed(false);
@@ -254,7 +249,7 @@ const CollaborativeSandBox: React.FC = () => {
           language={language}
           theme={theme}
         />
-      {positions.map((position, index) => (
+      {/* {positions.map((position, index) => (
   
   <div key={index} style={{ position: 'absolute', top: position.lineNumber*-2, left: position.column*10 }}>
     
@@ -262,9 +257,9 @@ const CollaborativeSandBox: React.FC = () => {
       {position.user}
     </div>
     
-  </div>
-  
-))}
+  </div> */}
+{/*   
+))} */}
        
 
         <div className="bg-black text-green-400 w-[40%]">
