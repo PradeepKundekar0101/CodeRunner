@@ -4,7 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { notify } from "../utils/notify";
 import { useAppSelector } from "../app/hooks";
 import SandBoxNav from "../components/SandBoxNav";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import useAxios from '../hooks/useAxios'
 const SandBox: React.FC = () => {
   const [output, setOutput] = useState<string>("");
@@ -70,13 +70,16 @@ const SandBox: React.FC = () => {
         }
       }, 1000);
     } catch (error: any) {
+     
       setRunning(false);
-      if (error.response) {
-        notify(error.response.data, false);
-        return;
-      }
+      // return
+      // if (error.response) {
+      //   notify(error.response.data, false);
+      //   return;
+      // }
       notify(error.message, false);
       console.error("Error running code:", error);
+      return;
     }
   };
   return (
@@ -92,8 +95,9 @@ const SandBox: React.FC = () => {
         running={running}
         setCode={setCode}
         language={language}
-        setLanguage={setLanguage}
-      />
+        setLanguage={setLanguage} setShowModal={function (value: React.SetStateAction<boolean>): void {
+          throw new Error("Function not implemented.");
+        } }      />
 
       <div className="flex">
         <MonacoEditor
