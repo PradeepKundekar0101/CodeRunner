@@ -49,10 +49,8 @@ const CreateFile = () => {
     <div className='h-[40rem] relative w-full bg-black flex flex-col items-center justify-center overflow-hidden '>
       <Toaster />
       <div className="w-full absolute inset-0 h-screen">
-        
-     
-              </div>
-      <div className='flex w-3/5 justify-center shadow-2xl'>
+      </div>
+      <div className='flex w-3/5 justify-center '>
         {/* Left Column */}
         <form
           className='flex flex-col px-8 py-10 relative space-y-2 bg-slate-900 justify-center'
@@ -80,7 +78,7 @@ const CreateFile = () => {
 
         {/* Right Column */}
         <div className='w-2/5'>
-         <img src={"https://i.ibb.co/gP1hmp7/Firefly-create-file-coding-theme-49294-1.jpg"} alt="Your Image" className=" object-cover" />
+         <img src={"https://emeritus.org/in/wp-content/uploads/sites/3/2023/02/pexels-neo-2653362-scaled-e1677062152304.jpg.optimal.jpg"} alt="Your Image" className=" object-cover" />
         </div>
       </div>
 
