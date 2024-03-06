@@ -5,6 +5,8 @@ import { notify } from "../utils/notify";
 import { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
+import { BsEye, BsEyeSlash } from "react-icons/bs";
+
 const JoinRoom = () => {
     const user = useAppSelector((state)=>{return state.auth.user});
     const navigate = useNavigate();
@@ -12,6 +14,7 @@ const JoinRoom = () => {
     const [roomId, setRoomId] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [create, setCreate] = useState<boolean>(true);
+    
     const handleToggle = () => {
         setCreate(!create);
         setRoomId("");
@@ -56,7 +59,7 @@ const JoinRoom = () => {
   return (
     <div className="h-[70vh] bg-black">
         <Toaster/>
-      <h1 className="text-5xl text-center text-white font-bold py-4">Welcome to Collabaration Mode</h1>
+      <h1 className="text-5xl text-center text-white font-bold py-4">Welcome to Collaboration Mode</h1>
       {create
         ? Form({
             title:"Create a Room",
@@ -85,6 +88,8 @@ const JoinRoom = () => {
     </div>
   );
 };
+
+//FORM COMPONENT
 const Form = ({
     title,
   handleToggle,
@@ -108,10 +113,11 @@ const Form = ({
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   handleSubmit:(e:React.FormEvent<HTMLFormElement>)=>void;
 }) => {
+  const [showPassword,setShowPassword] = useState(false);
   return (
     <div className="flex justify-center items-center">
       <form onSubmit={handleSubmit} className="flex flex-col ">
-        <h1 className="text-3xl">{title}</h1>
+        <h1 className="text-3xl text-white">{title}</h1>
         <input
           className="px-2 py-1 rounded-md text-lg my-2 bg-transparent border border-slate-300 text-white outline-none"
           onChange={(e) => {
@@ -121,15 +127,19 @@ const Form = ({
           placeholder="Room ID"
           value={roomId}
         />
+        <div className="px-2 py-1 flex items-center rounded-md  bg-transparent  text-lg my-2 border text-white border-slate-300 outline-none">
         <input
-          className="px-2 py-1 rounded-md  bg-transparent  text-lg my-2 border text-white border-slate-300 outline-none"
+          className="bg-transparent outline-none"
           onChange={(e) => {
             setPassword(e.target.value);
           }}
-          type="text"
+          type={showPassword?"text":"password"}
           placeholder="Password"
           value={password}
         />
+        <button type="button" onClick={()=>{setShowPassword((showPassword)=>{return !showPassword})}} className="text-white">{showPassword?<BsEye height={"20"} />:<BsEyeSlash/>}</button>
+        </div>
+      
         <input
           className="bg-green-600 rounded-md text-white py-1 px-2 my-2 cursor-pointer hover:bg-green-700"
           type="submit"
