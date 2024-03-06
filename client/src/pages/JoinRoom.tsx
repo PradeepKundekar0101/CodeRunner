@@ -117,7 +117,7 @@ const Form = ({
   return (
     <div className="flex justify-center items-center">
       <form onSubmit={handleSubmit} className="flex flex-col ">
-        <h1 className="text-3xl">{title}</h1>
+        <h1 className="text-3xl text-white">{title}</h1>
         <input
           className="px-2 py-1 rounded-md text-lg my-2 bg-transparent border border-slate-300 text-white outline-none"
           onChange={(e) => {

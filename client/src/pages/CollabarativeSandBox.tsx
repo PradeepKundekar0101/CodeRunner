@@ -5,7 +5,7 @@ import { notify } from "../utils/notify";
 import { useAppSelector } from "../app/hooks";
 import SandBoxNav from "../components/SandBoxNav";
 import RoomDetailsModal from "../components/RoomDetailsModal";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import useAxios from "../hooks/useAxios";
 import useRoomService from "../hooks/useRoom";
 
@@ -33,8 +33,8 @@ const CollaborativeSandBox: React.FC = () => {
   const [room, setRoom] = useState<IRoom | undefined>(undefined);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [participants, setParticipants] = useState<Participant[]>([]);
-  const [author,setAuthor] = useState<boolean>(false);
-  const [positions,setPositions] = useState<any[]>([]);
+
+
 
   const user = useAppSelector((state) => state.auth.user);
   const userId = user?._id || "";
@@ -61,36 +61,21 @@ const CollaborativeSandBox: React.FC = () => {
       try {
         const res = await getRoom(roomId || "");
         setRoom(res.room);
-        if(res.room.author==userId)
-          setAuthor(true);
         if (res.room.participants.find((e:any) => e.id === user._id)) {
           setIsAllowed(true);
         } else {
           setIsAllowed(false);
           return;
         }
-      }
-        catch(error:any){
-          notify(error.message, false);
-            setTimeout(() => {
-              navigate("/login");
-            }, 2000);
-            return;
-        }
-      socketRef.current = await initSocket();
-      if(!socketRef.current)
-        return;
-      socketRef.current.on("connect_error", (err: string) => {
-        handleError(err);
+        socketRef.current = await initSocket();
+        if(!socketRef.current)
+            return <Navigate to={"/"}/>;
+        socketRef.current.on("connect_error", (err: string) => {
+          handleError(err);
+        });
+        socketRef.current.on("connect_failed", (err: string) => {
+          handleError(err);
       });
-      socketRef.current.on("connect_failed", (err: string) => {
-        handleError(err);
-      });
-      const handleError = (err: string) => {
-        console.log(err);
-        notify(err, false);
-      };
-
       socketRef.current.emit(Actions.JOIN, {
         roomId,
         username: user?.user_name,
@@ -114,7 +99,7 @@ const CollaborativeSandBox: React.FC = () => {
       );
       socketRef.current.on(Actions.SYNC_CODE, ({ code }: { code: string }) => {
         setCode(code);
-    });
+      });
       socketRef.current.on(
         Actions.DISCONNECTED,
         ({ socketId, username }: { socketId: string; username: string }) => {
@@ -124,6 +109,22 @@ const CollaborativeSandBox: React.FC = () => {
           });
         }
       );
+      }
+        catch(error:any){
+          notify(error.message, false);
+            setTimeout(() => {
+              navigate("/login");
+            }, 1000);
+            return;
+        }
+     
+   
+      const handleError = (err: string) => {
+
+       return <ErrorBoundary/>
+      };
+
+      
     };
 
     init();
@@ -137,11 +138,9 @@ const CollaborativeSandBox: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    
     if(socketRef && socketRef.current){
       socketRef.current.on(Actions.CODE_CHANGED,({code,user,position}:{code:string,user:User,position:any})=>{
-        const temp = [...positions];
-        temp.push({lineNumber:position.lineNumber,column:position.column,user:user.user_name});
-        setPositions(temp);
         setCode(code);
       })
     }
