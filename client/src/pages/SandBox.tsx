@@ -4,7 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { notify } from "../utils/notify";
 import { useAppSelector } from "../app/hooks";
 import SandBoxNav from "../components/SandBoxNav";
-import { Navigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import useAxios from '../hooks/useAxios'
 const SandBox: React.FC = () => {
   const [output, setOutput] = useState<string>("");

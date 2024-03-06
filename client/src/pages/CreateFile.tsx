@@ -51,7 +51,7 @@ const CreateFile = () => {
       <div className="w-full absolute inset-0 h-screen">
       </div>
       <div className='flex w-3/5 justify-center '>
-        {/* Left Column */}
+
         <form
           className='flex flex-col px-8 py-10 relative space-y-2 bg-slate-900 justify-center'
           onSubmit={handleCreateFile}
@@ -76,7 +76,7 @@ const CreateFile = () => {
       </Link>
         </form>
 
-        {/* Right Column */}
+
         <div className='w-2/5'>
          <img src={"https://emeritus.org/in/wp-content/uploads/sites/3/2023/02/pexels-neo-2653362-scaled-e1677062152304.jpg.optimal.jpg"} alt="Your Image" className=" object-cover" />
         </div>
