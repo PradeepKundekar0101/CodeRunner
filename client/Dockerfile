@@ -1,4 +1,4 @@
-FROM node:14 as builder
+FROM node:20 as builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
@@ -6,7 +6,7 @@ COPY . .
 RUN npm run build
 
 
-FROM node:14-alpine
+FROM node:20
 WORKDIR /app
 
 
@@ -17,6 +17,6 @@ COPY --from=builder /app/dist ./dist
 RUN npm install 
 
 
-EXPOSE 3000
+EXPOSE 5173
 
-CMD ["npm", "dev"]
+CMD ["npm", "run", "dev"]

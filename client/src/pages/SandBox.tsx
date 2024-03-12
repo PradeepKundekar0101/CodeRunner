@@ -95,9 +95,8 @@ const SandBox: React.FC = () => {
         running={running}
         setCode={setCode}
         language={language}
-        setLanguage={setLanguage} setShowModal={function (value: React.SetStateAction<boolean>): void {
-          throw new Error("Function not implemented.");
-        } }      />
+        setLanguage={setLanguage}
+      />
 
       <div className="flex">
         <MonacoEditor

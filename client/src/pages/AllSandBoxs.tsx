@@ -2,7 +2,7 @@
 import { useState } from "react";
 import FileBox from "../components/FileBox";
 import { File } from "../types/code";
-import { notify } from "../utils/notify";
+// import { notify } from "../utils/notify";
 import { Toaster } from "react-hot-toast";
 import DelModal from "../components/DelModal";
 import CreateButton from "../components/CreateButton";
