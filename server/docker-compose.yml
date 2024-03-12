@@ -8,3 +8,8 @@ services:
     env_file:
       - .env
     container_name: coderbro-container
+  redis:
+    image: imageName
+    ports:
+      -"6379:6379"
+    container_name: redis-container

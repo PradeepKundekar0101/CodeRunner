@@ -20,7 +20,7 @@ const useCodeService = () => {
     const getAllFiles = async()=>{
         try {
             const {data} = await api.get(`code/user`);
-            console.log(data)
+            // console.log(data)
             return data.data.files;
 
         } catch (error:any) {

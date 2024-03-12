@@ -70,14 +70,14 @@ const SandBox: React.FC = () => {
         }
       }, 1000);
     } catch (error: any) {
-     
+     console.log(error)
       setRunning(false);
       // return
       // if (error.response) {
       //   notify(error.response.data, false);
       //   return;
       // }
-      notify(error.message, false);
+      notify(error.response.data || error.message, false);
       console.error("Error running code:", error);
       return;
     }
