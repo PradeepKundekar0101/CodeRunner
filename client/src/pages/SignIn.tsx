@@ -31,7 +31,7 @@ const SignIn = () => {
       notify("Login Successfull",true);
     },
     onError:(data:any)=>{
-      console.log(data)
+      // console.log(data)
       notify(data.message,false);
       setLoading(false);
     }

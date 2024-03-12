@@ -5,12 +5,13 @@ import { Room } from "../model/room";
 import { ApiResponse } from "../utils/apiResponse";
 import { SandBox } from "../model/sandbox";
 import { User } from "../model/user";
+import { CustomRequest } from "../types/CustomRequest";
 
-export const createRoom =  asyncHandler(async(req:Request,res:Response)=>{
+export const createRoom =  asyncHandler(async(req:CustomRequest,res:Response)=>{
     const {name,password} = req.body;
-    const author = req.user;
-    const authorId = author._id;
-    const authorName = author.user_name;
+    const author = req!.user;
+    const authorId = author!._id;
+    const authorName = author!.user_name;
     if(!name || !password || !authorId || !authorName )
        throw new ApiError(400,"All fields are required");
     const existedRoom = await Room.findOne({name})
@@ -39,11 +40,11 @@ export const getRoomById =  asyncHandler(async(req:Request,res:Response)=>{
 })
 
 
-export const joinRoom =  asyncHandler(async(req:Request,res:Response)=>{
+export const joinRoom =  asyncHandler(async(req:CustomRequest,res:Response)=>{
     const {name,password} = req.body;
     const user = req.user;
-    const userId = user._id;
-    const userName = user.user_name;
+    const userId = user!._id;
+    const userName = user!.user_name;
     if(!name || !password || !userId || !userName )
        throw new ApiError(400," Values missing required");
     const userFound = await User.findById(userId);

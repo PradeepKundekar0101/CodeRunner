@@ -71,7 +71,7 @@ const worker = new bullmq_1.Worker("jobQueue", (job) => __awaiter(void 0, void 0
         yield Promise.race([executionPromise, timeoutPromise]);
         const containerLogs = yield container.logs({ stdout: true, stderr: true });
         const containerResult = containerLogs.toString('utf-8').trim();
-        console.log(containerResult);
+        // console.log(containerResult);
         data["completedAt"] = new Date();
         data["status"] = "success";
         data["output"] = containerResult;

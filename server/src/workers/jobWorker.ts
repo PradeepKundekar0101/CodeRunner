@@ -62,7 +62,7 @@ const worker = new Worker("jobQueue",async (job)=>{
 
         const containerLogs = await container.logs({ stdout: true, stderr: true });
         const containerResult = containerLogs.toString('utf-8').trim();
-        console.log(containerResult);
+        // console.log(containerResult);
         data["completedAt"] = new Date();
         data["status"] = "success";
         data["output"] = containerResult;

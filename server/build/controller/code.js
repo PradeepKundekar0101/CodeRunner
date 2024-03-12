@@ -33,7 +33,7 @@ exports.executeCode = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(v
     }
     const job = yield job_1.default.create({ code, language, userId });
     res.status(200).json({ jobId: job._id });
-    console.log("Adding job in queue");
+    // console.log("Adding job in queue");
     jobQueue.add("job", job);
 }));
 exports.status = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
