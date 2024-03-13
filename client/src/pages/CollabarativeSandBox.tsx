@@ -120,7 +120,7 @@ const CollaborativeSandBox: React.FC = () => {
      
    
       const handleError = (err: string) => {
-
+        console.log(err)
        return <ErrorBoundary/>
       };
 
@@ -140,7 +140,7 @@ const CollaborativeSandBox: React.FC = () => {
   useEffect(() => {
     
     if(socketRef && socketRef.current){
-      socketRef.current.on(Actions.CODE_CHANGED,({code,user,position}:{code:string,user:User,position:any})=>{
+      socketRef.current.on(Actions.CODE_CHANGED,({code}:{code:string,user:User,position:any})=>{
         setCode(code);
       })
     }

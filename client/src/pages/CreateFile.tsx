@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { useAppSelector } from '../app/hooks';
 import { notify } from '../utils/notify';
 import { Link, useNavigate } from 'react-router-dom';
-import useAxios from '../hooks/useAxios';
+// import useAxios from '../hooks/useAxios';
 import { Toaster } from 'react-hot-toast';
-import { ArrowLeftIcon } from '@heroicons/react/24/outline';
-import { SparklesCore } from '../components/ui/sparkles';
+// import { ArrowLeftIcon } from '@heroicons/react/24/outline';
+// import { SparklesCore } from '../components/ui/sparkles';
 import { useMutation } from '@tanstack/react-query';
 import useCodeService from '../hooks/useCode';
-import React from 'react';
+// import React from 'react';
 
 const CreateFile = () => {
   const [title, setTitle] = useState<string>("");

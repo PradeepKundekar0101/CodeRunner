@@ -26,7 +26,7 @@ interface SandBoxNavProps {
   setCode: React.Dispatch<React.SetStateAction<string>>;
   runCode: () => Promise<void>;
   room?:IRoom;
-  setShowModal: React.Dispatch<React.SetStateAction<boolean>>
+  setShowModal?: React.Dispatch<React.SetStateAction<boolean>>
   participants?:Participant[];
   
 }
@@ -144,7 +144,7 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
       )}
     </div>
     }
-      <button className="text-3xl text-white" onClick={()=>{setShowModal(true)}}>
+      <button className="text-3xl text-white" onClick={()=>{setShowModal && setShowModal(true)}}>
       <BsThreeDotsVertical />
 
 
