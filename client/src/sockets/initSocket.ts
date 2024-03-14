@@ -1,5 +1,6 @@
 import { io } from 'socket.io-client';
 const baseURL = import.meta.env.VITE_SOCKET_SERVER;
+console.log(baseURL)
 export const initSocket = async () => {
     try {
         const options = {

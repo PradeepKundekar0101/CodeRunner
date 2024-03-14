@@ -76,7 +76,7 @@ const worker = new Worker("jobQueue",async (job)=>{
     }
 },{
     connection:{
-        host:"0.0.0.0",
+        host:"redis",
         port:6379
     }
 } ) 

@@ -1,4 +1,7 @@
 version: '3'
+networks:
+  shared_network:
+    driver: bridge
 services:
   coderbro-service:
     image: pradeepkundekar0101/coderbro-client
@@ -7,3 +10,5 @@ services:
     env_file:
       - .env
     container_name: coderbro-client-container
+    networks:
+      - shared_network
