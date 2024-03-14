@@ -1,0 +1,10 @@
+version: '3'
+networks:
+  shared_network:
+    driver: bridge
+services:
+  coderbro-service:
+    image: pradeepkundekar0101/coderbro-socket
+    ports:
+      - "3001:3001"
+    container_name: coderbro-socket-container
