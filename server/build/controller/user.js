@@ -8,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginUser = exports.registerUser = void 0;
 const asyncHandler_1 = require("../utils/asyncHandler");
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const apiError_1 = require("../utils/apiError");
 const user_1 = require("../model/user");
 const apiResponse_1 = require("../utils/apiResponse");
@@ -24,7 +28,8 @@ exports.registerUser = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(
     if (existedUser) {
         throw new apiError_1.ApiError(409, "User with email or username already exists");
     }
-    const user = yield user_1.User.create({ email, user_name, password });
+    const hashPass = yield bcrypt_1.default.hash(password, 10);
+    const user = yield user_1.User.create({ email, user_name, password: hashPass });
     const token = yield user.generateToken();
     const createdUser = yield user_1.User.findById(user._id).select("-password");
     if (!createdUser)
@@ -39,7 +44,7 @@ exports.loginUser = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(voi
     if (!existedUser) {
         throw new apiError_1.ApiError(400, "Invalid credentials");
     }
-    const passwordCorrect = existedUser.isPasswordCorrect(password);
+    const passwordCorrect = yield bcrypt_1.default.compare(password, existedUser.password);
     if (!passwordCorrect)
         throw new apiError_1.ApiError(400, "Invalid credentials");
     const token = yield existedUser.generateToken();

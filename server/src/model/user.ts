@@ -37,15 +37,12 @@ const UserSchema = new Schema<IUser>({
   },
 });
 
-UserSchema.pre("save", async function (next) {
-  if (this.isModified("password"))
-    this.password = await bcrypt.hash(this.password, 10);
-  next();
-});
 
-UserSchema.methods.isPasswordCorrect = async function (password: string) {
-  return await bcrypt.compare(password, this.password);
-};
+
+// UserSchema.methods.isPasswordCorrect = async function (password: string) {
+//   const res = await bcrypt.compare(password, this.password);
+//   return res;
+// };
 
 UserSchema.methods.generateToken = async function () {
   return jwt.sign(

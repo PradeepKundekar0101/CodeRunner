@@ -19,9 +19,13 @@ const asyncHandler_1 = require("../utils/asyncHandler");
 const job_1 = __importDefault(require("../model/job"));
 const bullmq_1 = require("bullmq");
 const sandbox_1 = require("../model/sandbox");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const inst = process.env.ENV;
+console.log(inst);
 const jobQueue = new bullmq_1.Queue("jobQueue", {
     connection: {
-        host: "0.0.0.0",
+        host: inst === "dev" ? "0.0.0.0" : "redis",
         port: 6379
     }
 });
