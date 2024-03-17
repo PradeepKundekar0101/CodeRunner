@@ -15,7 +15,7 @@ services:
       - redis
     networks:
       - shared_network
-    image: pradeepkundekar0101/coderbro-server
+    image: pradeepkundekar0101/coderbro-server:latest
     ports:
       - "8000:8000"
     env_file:

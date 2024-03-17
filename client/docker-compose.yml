@@ -4,7 +4,7 @@ networks:
     driver: bridge
 services:
   coderbro-service:
-    image: pradeepkundekar0101/coderbro-client
+    image: pradeepkundekar0101/coderbro-client:latest
     ports:
       - "5173:5173"
     env_file:
