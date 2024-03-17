@@ -16,6 +16,8 @@ const bullmq_1 = require("bullmq");
 const apiError_1 = require("../utils/apiError");
 const dockerode_1 = __importDefault(require("dockerode"));
 const job_1 = __importDefault(require("../model/job"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const worker = new bullmq_1.Worker("jobQueue", (job) => __awaiter(void 0, void 0, void 0, function* () {
     const docker = new dockerode_1.default();
     let image;
@@ -86,7 +88,7 @@ const worker = new bullmq_1.Worker("jobQueue", (job) => __awaiter(void 0, void 0
     }
 }), {
     connection: {
-        host: "0.0.0.0",
+        host: process.env.ENV === "dev" ? "0.0.0.0" : "redis",
         port: 6379
     }
 });

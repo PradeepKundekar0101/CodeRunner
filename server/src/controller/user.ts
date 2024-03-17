@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { asyncHandler } from "../utils/asyncHandler"
-
+import bcrypt from "bcrypt";
 import { ApiError } from "../utils/apiError";
 import { User } from "../model/user";
 import { ApiResponse } from "../utils/apiResponse";
@@ -16,7 +16,8 @@ export const registerUser =  asyncHandler(async(req:Request,res:Response)=>{
     if (existedUser) {
         throw new ApiError(409, "User with email or username already exists")
     }
-    const user = await User.create({email,user_name,password});
+    const hashPass = await bcrypt.hash(password,10)
+    const user = await User.create({email,user_name,password:hashPass});
     const token = await user.generateToken();
     const createdUser = await User.findById(user._id).select("-password");
     if(!createdUser)
@@ -33,7 +34,8 @@ export const loginUser =  asyncHandler(async(req:Request,res:Response)=>{
     if (!existedUser) {
         throw new ApiError(400, "Invalid credentials")
     }
-    const passwordCorrect = existedUser.isPasswordCorrect(password);
+
+    const passwordCorrect = await bcrypt.compare(password,existedUser.password);
     if(!passwordCorrect)
         throw new ApiError(400, "Invalid credentials")
     const token = await existedUser.generateToken();

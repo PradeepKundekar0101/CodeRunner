@@ -37,7 +37,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const UserSchema = new mongoose_1.Schema({
     user_name: {
@@ -65,18 +64,10 @@ const UserSchema = new mongoose_1.Schema({
         required: true,
     },
 });
-UserSchema.pre("save", function (next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (this.isModified("password"))
-            this.password = yield bcrypt_1.default.hash(this.password, 10);
-        next();
-    });
-});
-UserSchema.methods.isPasswordCorrect = function (password) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return yield bcrypt_1.default.compare(password, this.password);
-    });
-};
+// UserSchema.methods.isPasswordCorrect = async function (password: string) {
+//   const res = await bcrypt.compare(password, this.password);
+//   return res;
+// };
 UserSchema.methods.generateToken = function () {
     return __awaiter(this, void 0, void 0, function* () {
         return jsonwebtoken_1.default.sign({ _id: this._id, email: this.email, user_name: this.user_name }, process.env.JWT_SECRET || "abc");

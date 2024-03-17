@@ -2,13 +2,17 @@ import {Worker} from 'bullmq';
 import { ApiError } from "../utils/apiError";
 import Docker from 'dockerode';
 import Job, {IJob} from "../model/job";
+import dotenv from 'dotenv'
+
+
+dotenv.config();
 const worker = new Worker("jobQueue",async (job)=>{
     const docker = new Docker();
     let image:string;
     let command:string[];
     const data:IJob = job.data;
     const {language,code} = data;
-
+    
     if (!code || !language) {
         throw new ApiError(400, "Code and language are required");
     }
@@ -37,7 +41,7 @@ const worker = new Worker("jobQueue",async (job)=>{
         default:
             throw new ApiError(400, "Unsupported language");
     }
-
+    
     const containerConfig = {
         Image: image,
         Tty: false,
@@ -76,7 +80,8 @@ const worker = new Worker("jobQueue",async (job)=>{
     }
 },{
     connection:{
-        host:"redis",
+        
+        host: process.env.ENV==="dev"?"0.0.0.0":"redis",
         port:6379
     }
 } ) 
