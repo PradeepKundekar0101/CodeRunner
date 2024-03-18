@@ -19,7 +19,7 @@ const limiter = rateLimit({
 });
 
 app.use('/api/v1/code/execute', limiter);
-app.get("/api/v1/health",(req:Request,res:Response)=>{
+app.get("/api/v1/",(req:Request,res:Response)=>{
   res.send("Hello");
 })
 app.use('/api/v1/user',userRoute);
