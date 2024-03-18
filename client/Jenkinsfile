@@ -1,47 +1,46 @@
-pipeline{
+pipeline {
     agent any
-    stages{
-        stage("Clone the repo"){
-            steps{
+    stages {
+        stage("Clone the repo") {
+            steps {
                 echo "Cloning the repo"
-                git url:"https://github.com/PradeepKundekar0101/CodeRunner.git", branch:"master"
+                git url: "https://github.com/PradeepKundekar0101/CodeRunner.git", branch: "master"
                 echo "Code cloned!"
             }
         }
-        stage("Create env"){
-            steps{
-                script{
+        stage("Create env") {
+            steps {
+                script {
                     def serverUrl = ''
                     def socketUrl = ''
-                    withCredentials([ string( credentialsId:"VITE_BASE_URL", variable:'VITE_BASE_URL') ]){
-                        serverUrl=env.VITE_BASE_URL
+                    withCredentials([string(credentialsId: "VITE_BASE_URL", variable: 'VITE_BASE_URL')]) {
+                        serverUrl = env.VITE_BASE_URL
                     }
-                    withCredentials([string(credentialsId:"VITE_SOCKET_URL",variable:"VITE_SOCKET_URL")]){
-                        socketUrl=env.VITE_SOCKET_URL
+                    withCredentials([string(credentialsId: "VITE_SOCKET_URL", variable: "VITE_SOCKET_URL")]) {
+                        socketUrl = env.VITE_SOCKET_URL
                     }
                     def content = """
                         VITE_BASE_URL=${serverUrl}
                         VITE_SOCKET_URL=${socketUrl}
                     """
-                    dir("client"){
-                        writeFile file:".env" content:content
+                    dir("client") {
+                        writeFile file: ".env", content: content
                     }
                 }
-
             }
         }
-        stage("Build the image"){
-            echo "Building Image"
-            dir("client")
-            {
-                sh "docker build -t coderbro-client ."
-                echo "Built"
+        stage("Build the image") {
+            steps {
+                echo "Building Image"
+                dir("client") {
+                    sh "docker build -t coderbro-client ."
+                    echo "Built"
+                }
             }
         }
-        stage("Push to DH")
-        {
-            steps{
-                 withCredentials([usernamePassword(credentialsId:"dockerHub",passwordVariable:"dockerPass",usernameVariable:"dockerUser")]){
+        stage("Push to DH") {
+            steps {
+                withCredentials([usernamePassword(credentialsId: "dockerHub", passwordVariable: "dockerPass", usernameVariable: "dockerUser")]) {
                     sh "docker login -u ${env.dockerUser} -p ${env.dockerPass}"
                     sh "docker tag coderbro-client ${env.dockerUser}/coderbro-client:latest"
                     sh "docker push ${env.dockerUser}/coderbro-client:latest"
@@ -49,14 +48,10 @@ pipeline{
                 echo "Image Pushed"
             }
         }
-        stage("Deploy")
-        {
-            steps{
-                dir("client")
-                {
-                    sh "docker compose down && docker compose up -d"
-                    echo "Deployed"
-                }
+        stage("Deploy") {
+            steps {
+                sh "cd client && docker-compose down && docker-compose up -d"
+                echo "Deployed"
             }
         }
     }
