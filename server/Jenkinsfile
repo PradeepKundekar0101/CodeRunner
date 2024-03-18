@@ -45,7 +45,7 @@ pipeline {
             steps {
                 echo 'Building image'
                 dir('server') {
-                        sh 'sudo docker build -t coderbro-server .'
+                        sh 'docker build -t coderbro-server .'
                         echo 'Build done'
                     }
             }
