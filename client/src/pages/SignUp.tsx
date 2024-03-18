@@ -176,6 +176,7 @@ const SignUp = () => {
         <button type="submit" className="inline-flex items-center justify-center py-2 px-6 font-medium tracking-wide text-black transition duration-200 bg-white rounded-lg hover:bg-gray-800 hover:text-white focus:shadow-outline focus:outline-none">
           {loading ? "Signing up..." : "Sign Up"}
         </button>
+      
         <Link className="text-white my-2 block" to="/signin">
           Already have an account? Log in
         </Link>
