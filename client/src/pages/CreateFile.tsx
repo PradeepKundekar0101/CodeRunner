@@ -50,10 +50,10 @@ const CreateFile = () => {
       <Toaster />
       <div className="w-full absolute inset-0 h-screen">
       </div>
-      <div className='flex w-3/5 justify-center '>
+      <div className='flex w-3/5 justify-center flex-col-reverse md:flex-row '>
 
         <form
-          className='flex flex-col px-8 py-10 relative space-y-2 bg-slate-900 justify-center'
+          className='flex flex-col  px-8 py-10 relative space-y-2 bg-slate-900 justify-center '
           onSubmit={handleCreateFile}
         >
           <input
@@ -68,17 +68,15 @@ const CreateFile = () => {
           <input
             type="submit"
             value="Let's Go"
-            className='inline-flex items-center w-full px-5 py-2 mb-3 mr-1 text-base font-semibold text-white no-underline align-middle bg-blue-600 border border-transparent border-solid rounded-md cursor-pointer select-none sm:mb-0 sm:w-auto hover:bg-blue-700 hover:border-blue-700 hover:text-white focus-within:bg-blue-700 focus-within:border-blue-700'
+            className='inline-flex items-center w-full px-5 py-2 mb-3 mr-1 text-base font-semibold text-white no-underline align-middle bg-blue-600 border border-transparent border-solid rounded-md cursor-pointer select-none sm:mb-0 sm:w-auto hover:bg-blue-700 hover:border-blue-700 hover:text-white focus-within:bg-blue-700 focus-within:border-blue-700 '
           />
-            <Link className='text-white absolute bottom-5  text-lg justify-center items-center' to={"/"}>
-             <span>Back</span>
-           
-      </Link>
+            <Link className='text-white absolute  bottom-5 pt-5 text-lg justify-center items-center' to={"/"}>
+             <span className='pt-4'>Back</span>
+             </Link>
         </form>
 
-
-        <div className='w-2/5'>
-         <img src={"https://emeritus.org/in/wp-content/uploads/sites/3/2023/02/pexels-neo-2653362-scaled-e1677062152304.jpg.optimal.jpg"} alt="Your Image" className=" object-cover" />
+        <div className=' w-0 md:w-2/5'>
+         <img src={"https://emeritus.org/in/wp-content/uploads/sites/3/2023/02/pexels-neo-2653362-scaled-e1677062152304.jpg.optimal.jpg"} alt="Your Image" className="object-fit" />
         </div>
       </div>
 

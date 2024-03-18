@@ -157,6 +157,11 @@ const CollaborativeSandBox: React.FC = () => {
   };
   const runCode = async () => {
     try {
+      if(code.length==0)
+      {
+        notify("Empty code",false);
+        return;
+      }
       setRunning(true);
       const response = await axios.post("code/execute", {
         code,

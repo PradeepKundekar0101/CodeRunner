@@ -65,8 +65,8 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
   }
  
   return (
-    <div className="flex justify-end py-3 space-x-3 px-5 border-t-2 border-b-2 border-slate-700 bg-slate-900 ">
-      <div className="flex items-center bg-slate-700 text-white py-1 px-2 rounded-md">
+    <div className="flex justify-end items-center py-3 space-x-3 px-5 border-t-2 border-b-2 border-slate-700 bg-slate-900 ">
+      <div className="flex text-sm items-center bg-slate-700 text-white py-1 px-2 rounded-md">
       <label htmlFor="size">Language&nbsp;</label>
         <select
           name="lang"
@@ -84,7 +84,7 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
         </select>
       </div>
 
-      <div className="flex items-center bg-slate-700 text-white py-1 px-2 rounded-md">
+      <div className="flex items-center text-sm bg-slate-700 text-white py-1 px-2 rounded-md">
         <label htmlFor="size">Font Size&nbsp;</label>
         <select
           name="size"
@@ -107,7 +107,7 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
       }
       <button
         disabled={running}
-        className="bg-green-600 flex items-center py-1 px-3 rounded-lg text-white hover:bg-green-700"
+        className="bg-green-600 text-sm flex items-center py-2 px-3 rounded-lg text-white hover:bg-green-700"
         onClick={runCode}
       >
         {running ? "Running..." : "Run"}
