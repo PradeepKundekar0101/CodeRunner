@@ -16,6 +16,7 @@ pipeline {
                         // Retrieve credentials from Jenkins Global credentials
                         def mongoUri = ''
                         def jwtSecret = ''
+                        def env = 'prod'
     
                         // Retrieve MONGO_URI credential
                         withCredentials([string(credentialsId: 'MONGO_URI', variable: 'MONGO_URI')]) {
@@ -30,6 +31,7 @@ pipeline {
                         def envContent = """
                             MONGO_URI=${mongoUri}
                             JWT_SECRET=${jwtSecret}
+                            ENV=${env}
                         """
                         // Write the content to the server.env file
                         dir("server"){
@@ -43,7 +45,7 @@ pipeline {
             steps {
                 echo 'Building image'
                 dir('server') {
-                        sh 'docker build -t coderbro-server .'
+                        sh 'sudo docker build -t coderbro-server .'
                         echo 'Build done'
                     }
             }
