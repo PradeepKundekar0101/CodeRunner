@@ -21,7 +21,7 @@ pipeline {
                     }
                      def envContent = """
                             VITE_BASE_URL=${serverUrl}
-                            VITE_SOCKET_URL=${socketUrl}
+                            VITE_SOCKET_SERVER=${socketUrl}
                         """
                     
                     dir("client") {
