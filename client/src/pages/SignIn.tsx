@@ -41,7 +41,7 @@ const SignIn = () => {
     setLoading(true);
     mutate({email,password});
   };
-  const handleGuestLogin = (e:any)=>{
+  const handleGuestLogin = ()=>{
     setLoading(true);
     mutate({email:"coderbro@gmail.com",password:"123456"});
   }
