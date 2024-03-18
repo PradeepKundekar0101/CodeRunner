@@ -19,12 +19,13 @@ pipeline {
                     withCredentials([string(credentialsId: "VITE_SOCKET_URL", variable: "VITE_SOCKET_URL")]) {
                         socketUrl = env.VITE_SOCKET_URL
                     }
-                    def content = """
-                        VITE_BASE_URL=${serverUrl}
-                        VITE_SOCKET_URL=${socketUrl}
-                    """
+                     def envContent = """
+                            VITE_BASE_URL=${serverUrl}
+                            VITE_SOCKET_URL=${socketUrl}
+                        """
+                    
                     dir("client") {
-                        writeFile file: ".env", content: content
+                        writeFile file: ".env", text: envContent
                     }
                 }
             }
