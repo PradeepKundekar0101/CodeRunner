@@ -47,8 +47,8 @@ export default function Example() {
                 <div className="flex flex-shrink-0 items-center">
                   <img
                     className="h-8 w-auto"
-                    src={"/public/logo.png"}
-                    alt="Your Company"
+                    src={"logo.png"}
+                    alt="CoderBro"
                   />
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
