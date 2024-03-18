@@ -11,8 +11,8 @@ pipeline{
         stage("Create env"){
             steps{
                 script{
-                    def serverUrl:''
-                    def socketUrl:''
+                    def serverUrl = ''
+                    def socketUrl = ''
                     withCredentials([ string( credentialsId:"VITE_BASE_URL", variable:'VITE_BASE_URL') ]){
                         serverUrl=env.VITE_BASE_URL
                     }
