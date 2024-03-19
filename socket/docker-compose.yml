@@ -3,7 +3,7 @@ networks:
   shared_network:
     driver: bridge
 services:
-  coderbro-service:
+  coderbro-socket-service:
     image: pradeepkundekar0101/coderbro-socket
     ports:
       - "3001:3001"
