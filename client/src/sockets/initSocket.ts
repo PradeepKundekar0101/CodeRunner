@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client';
-const baseURL = import.meta.env.VITE_SOCKET_SERVER;
+const baseURL = "http://coderbro.online:3001/";
 console.log(baseURL)
 export const initSocket = async () => {
     try {
