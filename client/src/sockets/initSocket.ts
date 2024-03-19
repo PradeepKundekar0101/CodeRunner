@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client';
-const baseURL = "http://coderbro-socket-service:3001";
+const baseURL = "https://coderbro-socket-service:3001";
 console.log(baseURL)
 export const initSocket = async () => {
     try {
