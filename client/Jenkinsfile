@@ -34,7 +34,7 @@ pipeline {
             steps {
                 echo "Building Image"
                 dir("client") {
-                    sh "docker build --no-cache -t coderbro-client ."
+                    sh "docker build -t coderbro-client ."
                     echo "Built"
                 }
             }

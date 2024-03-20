@@ -4,7 +4,7 @@ networks:
     driver: bridge
 services:
   coderbro-socket-service:
-    image: pradeepkundekar0101/coderbro-socket
+    image: pradeepkundekar0101/coderbro-socket:latest
     ports:
       - "3001:3001"
     container_name: coderbro-socket-container
