@@ -65,7 +65,7 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
   }
  
   return (
-    <div className="flex justify-end items-center py-3 space-x-3 px-5 border-t-2 border-b-2 border-slate-700 bg-slate-900 ">
+    <div className="flex justify-end items-center py-3 space-x-1 md:space-x-3 px-5 border-t-2 border-b-2 border-slate-700 bg-slate-900 ">
       <div className="flex text-sm items-center bg-slate-700 text-white py-1 px-2 rounded-md">
       <label htmlFor="size">Language&nbsp;</label>
         <select
@@ -85,7 +85,7 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
       </div>
 
       <div className="flex items-center text-sm bg-slate-700 text-white py-1 px-2 rounded-md">
-        <label htmlFor="size">Font Size&nbsp;</label>
+        <label htmlFor="size" className="text-sm hidden">Font Size&nbsp;</label>
         <select
           name="size"
           className="bg-slate-600 px-3 py-1 rounded-md focus:outline-none"
@@ -101,21 +101,19 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
       </div>
       {
         !room &&
-          <button onClick={handleSave}>
+          <button  onClick={handleSave}>
           <FaRegSave fill="#fff"   size={30} />
         </button>
       }
       <button
         disabled={running}
-        className="bg-green-600 text-sm flex items-center py-2 px-3 rounded-lg text-white hover:bg-green-700"
+        className="bg-green-600 text-sm flex items-center px-2 py-1 md:py-2 md:px-3 rounded-lg text-white hover:bg-green-700"
         onClick={runCode}
       >
         {running ? "Running..." : "Run"}
         &nbsp; <FaPlay />
       </button>
     
-    
-
       <button
         onClick={() => {
           if (theme === "vs-dark") setTheme("light");
@@ -133,7 +131,7 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
       <div className="contributors flex ">
 
       {participants && participants.slice(0, displayCount).map((participant, index) => (
-        <span key={index} className={`w-10   flex items-center justify-center  ${getCircleStyle(index)} `}>
+        <span title={participant.username} key={index} className={`w-10   flex items-center justify-center  ${getCircleStyle(index)} `}>
           {participant.username.charAt(0).toUpperCase()}
         </span>
       ))}
@@ -144,7 +142,7 @@ const SandBoxNav: React.FC<SandBoxNavProps> = ({
       )}
     </div>
     }
-      <button className="text-3xl text-white" onClick={()=>{setShowModal && setShowModal(true)}}>
+      <button className="text-3xl text-white" onClick={()=>{setShowModal && setShowModal(true)}} style={setShowModal==undefined?{display:"none"}:{}} >
       <BsThreeDotsVertical />
 
 

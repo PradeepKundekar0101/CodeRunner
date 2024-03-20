@@ -53,7 +53,7 @@ const AllSandBoxs = () => {
           <CreateButton />
         </div>
       )}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3 h-auto">
         {files && files.map((file:File, ind:number) => {
           return (
             <FileBox
