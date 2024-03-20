@@ -1,8 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { IoMdClose } from "react-icons/io";
 import { ImExit } from "react-icons/im";
-import { MdContentCopy } from "react-icons/md";
 
 interface Props {
   roomName: string;
@@ -20,52 +18,45 @@ const RoomDetailsModal: React.FC<Props> = ({
   const navigate = useNavigate();
   return (
     <div className="overlay h-screen w-screen absolute z-50 bg-[#0008]">
-      <div className="modal p-10 mx-auto rounded-md flex items-center justify-center h-96 w-[20vw] flex-col bg-white relative">
-        <div>
-          <h1 className="text-xl">Room Name:</h1>
-          <div className="flex justify-between bg-slate-100 rounded-md px-3 py-1">
-            <h1 className="text-2xl ">{roomName}</h1>
-            <button>
-              <MdContentCopy />
-            </button>
+      <div className="modal gap-4  py-5 mx-auto rounded-md flex items-center  h-96 w-[80vw] md:w-[20vw] flex-col bg-white relative">
+        <div id="head">
+          <h1 className="text-lg px-4" style={{ borderBottom: "0.7px solid black" }}>Room details</h1>
+        </div>
+        <div id="body">
+          <div className="flex items-center gap-3">
+            <h1 className="text-md">Room Name: {roomName}</h1>
           </div>
+
+          <div className="">
+            <h1 className="text-md">Room Password: {roomPassword}</h1>
+          </div>
+          <div>
+            <h1>Participants:</h1>
+            <ul className="flex flex-col gap-1">
+              {participants &&
+                participants.map((p) => {
+                  return <li className="bg-slate-200 rounded-full px-1">{p.username}</li>;
+                })}
+            </ul>
+          </div>
+
         </div>
 
-        <div className="mt-3">
-          <h1 className="text-xl">Room Password:</h1>
-          <div className="flex justify-between bg-slate-100 rounded-md px-3 py-1">
-            <h1 className="text-2xl ">{roomPassword}</h1>
-            <button>
-              <MdContentCopy />
-            </button>
-          </div>
-        </div>     
-        <div>
-            <h1>Participants</h1>
-          <ul>
-            {participants &&
-              participants.map((p) => {
-                return <li>{p.username}</li>;
-              })}
-          </ul>
+        <div id="footer" className="flex space-x-2">
+          <button
+            className="bg-red-500 py-1 px-3 flex items-center text-white space-x-2 rounded-md "
+            onClick={() => {
+              navigate("/collab");
+            }}
+          >
+            Leave Room &nbsp; <ImExit />
+
+          </button>
+          <button onClick={()=>{setShowModal(false)}} className="text-black cursor-pointer">
+            Cancel
+          </button>
         </div>
 
-        <button
-          onClick={() => {
-            setShowModal(false);
-          }}
-          className="absolute top-5 right-5"
-        >
-          <IoMdClose />
-        </button>
-        <button
-          className="bg-red-500 py-1 px-3 flex items-center text-white space-x-2 rounded-md absolute bottom-5"
-          onClick={() => {
-            navigate("/collab");
-          }}
-        >
-          Leave Room &nbsp; <ImExit />
-        </button>
       </div>
     </div>
   );
